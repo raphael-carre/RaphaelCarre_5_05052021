@@ -1,0 +1,28 @@
+header {
+    justify-self: flex-start;
+    @extend %flex-col;
+    justify-content: center;
+    align-items: center;
+
+    background-color: $color-primary;
+
+    nav {
+        ul {
+            @extend %flex-row;
+            padding: 0;
+            list-style: none;
+        }
+
+        a {
+            display: block;
+            padding: 0.75em 1em;
+        }
+    }
+}
+
+@include wide-screen {
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

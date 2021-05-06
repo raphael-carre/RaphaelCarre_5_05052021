@@ -1,0 +1,15 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    @extend %flex-col;
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+}
