@@ -11,6 +11,7 @@ cssLoaders.push({
 
 let config = {
     entry: {
+        polyfill: "babel-polyfill",
         app: [
             "./assets/js/index.js",
             "./assets/sass/style.scss"

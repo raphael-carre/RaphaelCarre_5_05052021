@@ -1,0 +1,13 @@
+export default class Request {
+    /**
+     * Crée une requête vers un serveur distant
+     * @param {String} url 
+     * @returns {Promise} Retourne une promesse contenant la réponse du serveur au format JSON
+     */
+    getDatas (url) {
+        return fetch(url)
+            .then(response => {
+                if (response.ok) return response.json()
+            })
+    }
+}
