@@ -1,3 +1,5 @@
+import Cart from './Cart.class'
+
 /**
  * Classe utilitaire permettant de créer les éléments HTML nécessaires à l'application.
  */
@@ -77,6 +79,7 @@ export default class HtmlFactory {
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
         form.id = 'addToCartForm'
+        form.addEventListener('submit', function(e) { Cart.addToCart(e) })
 
         const inputHidden = document.createElement('input')
         inputHidden.setAttribute('type', 'hidden')
