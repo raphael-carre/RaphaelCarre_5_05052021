@@ -1,11 +1,13 @@
+/**
+ * Classe utilitaire permettant de créer les éléments HTML nécessaires à l'application.
+ */
 export default class HtmlFactory {
     /**
      * Créé un élément HTML complet pour un affichage en liste,
      * et contant les informations du produit passé en paramètre.
      * @param {Object} product 
-     * @returns {HTMLElement} Retourne l'élément HTML.
      */
-    displayProductFromList(product) {
+    static displayProductFromList(product) {
         const card = document.createElement('div')
         card.classList.add('product-list-card')
 
@@ -20,7 +22,7 @@ export default class HtmlFactory {
 
         const price = document.createElement('span')
         price.classList.add('product-list-card__price')
-        price.textContent = this.formatPrice(product.price)
+        price.textContent = this.#formatPrice(product.price)
 
         const info = document.createElement('div')
         info.classList.add('product-list-card__info')
@@ -40,16 +42,15 @@ export default class HtmlFactory {
         info.appendChild(name)
         info.appendChild(description)
 
-        return card
+        this.#addToContainer(card, 'main', 'product-list')
     }
 
     /**
      * Créé un élément HTML complet contenant les informations du produit passé en paramètre,
      * ainsi qu'un formulaire pour ajouter le produit au panier.
      * @param {Object} product 
-     * @returns {HTMLElement} Retourne l'élément HTML.
      */
-    displayOneProduct(product) {
+    static displayOneProduct(product) {
         const card = document.createElement('div')
         card.classList.add('product')
 
@@ -71,7 +72,7 @@ export default class HtmlFactory {
         
         const price = document.createElement('p')
         price.classList.add('product__price')
-        price.textContent = this.formatPrice(product.price)
+        price.textContent = this.#formatPrice(product.price)
 
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
@@ -136,7 +137,7 @@ export default class HtmlFactory {
         formField2.appendChild(labelQuantity)
         formField2.appendChild(inputQuantity)
 
-        return card
+        this.#addToContainer(card, 'main', 'product-section')
     }
 
     /**
@@ -144,7 +145,19 @@ export default class HtmlFactory {
      * @param {Number} price 
      * @returns {String} Renvoie une chaîne de caractères.
      */
-    formatPrice(price) {
+    static #formatPrice(price) {
         return price = `${(price / 100).toString()} €`
+    }
+
+    /**
+     * Ajoute un élément à une cible et assigne une classe CSS à cette dernière.
+     * @param {HTMLElement} element 
+     * @param {String} targetId
+     * @param {String} cssClass 
+     */
+    static #addToContainer(element, targetId, cssClass) {
+        const target = document.getElementById(targetId)
+        target.classList.add(cssClass)
+        target.appendChild(element)
     }
 }

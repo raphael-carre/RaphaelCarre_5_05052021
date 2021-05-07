@@ -6,7 +6,7 @@ section:first-of-type {
     }
 }
 
-#product-list {
+.product-list {
     @extend %flex-row;
     flex-wrap: wrap;
     justify-content: space-evenly;
