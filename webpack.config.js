@@ -1,9 +1,24 @@
 const path = require("path")
+const Webpack = require('webpack')
 const miniExtractTextPlugin = require("mini-css-extract-plugin")
+const dev = process.env.NODE_ENV === "development"
 
 let cssLoaders = [{
     loader: "css-loader"
 }]
+
+if (!dev) {
+    cssLoaders.push({
+        loader: 'postcss-loader',
+        options: {
+            plugins: (loader) => [
+                require('autoprefixer')({
+                    overrideBrowserslist: ['last 2 versions', 'ie > 8']
+                })
+            ]
+        }
+    })
+}
 
 cssLoaders.push({
     loader: "resolve-url-loader",
@@ -11,7 +26,6 @@ cssLoaders.push({
 
 let config = {
     entry: {
-        polyfill: "babel-polyfill",
         app: [
             "./assets/js/index.js",
             "./assets/sass/style.scss"
@@ -30,6 +44,7 @@ let config = {
             "@css": path.resolve("./assets/sass/")
         }
     },
+    devtool: dev ? "eval-cheap-module-source-map" : false,
     module: {
         rules: [
             {
@@ -74,10 +89,20 @@ let config = {
             }
         ]
     },
-    watch: true,
     plugins: [
+        new Webpack.DefinePlugin({
+            'process_env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+            }
+        }),
         new miniExtractTextPlugin({filename: "css/style.css"})
     ]
+}
+
+if (dev) {
+    config.plugins.push(
+        new Webpack.HotModuleReplacementPlugin()
+    )
 }
 
 module.exports = config

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "allowSyntheticDefaultImports": false,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "@img/*": [
+                "./assets/images/*"
+            ],
+            "@css/*": [
+                "./assets/sass/*"
+            ],
+            "@js/*": [
+                "./assets/js/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "assets/js/**/*"
+    ]
+}
