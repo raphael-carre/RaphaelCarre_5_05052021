@@ -1,0 +1,39 @@
+form > * + * {
+    margin-top: 1em;
+}
+
+form div {
+    @extend %flex-row;
+}
+
+label, input, select {
+    display: inline-block;
+    padding: .7em 1em;
+    border: 1px solid $color-secondary;
+}
+
+label {
+    width: 20%;
+    min-width: 6em;
+    text-align: right;
+    border-right: none;
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    background-color: $color-primary;
+}
+
+input, select {
+    flex: 1 1 auto;
+    border-left: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    border-bottom-left-radius: 0;
+    font-size: 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+select {
+}

@@ -1,3 +1,10 @@
-$color-primary: #f3e8f1;
+$color-primary: #ddd;
+$color-secondary: #925efc;
+$color-tertiary: #f3e8f1;
 
-$breakpoint: 800px;
+$border-radius: .5em;
+
+$breakpoints: (
+    mid-screen: 500px,
+    wide-screen: 800px
+);

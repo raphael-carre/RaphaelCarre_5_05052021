@@ -1,0 +1,44 @@
+.btn {
+    position: relative;
+    display: block;
+    padding: .7em 1em;
+    width: 100%;
+
+    border: none;
+    border-radius: $border-radius;
+    border: 1px solid $color-secondary;
+    background-color: $color-primary;
+    font-size: 1.1rem;
+    color: #000;
+
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: inherit;
+        box-shadow: .15em .15em .4em rgba(0,0,0,.4);
+        opacity: 0;
+        transition: opacity .2s linear;
+    }
+
+    @include wide-screen {
+        width: initial;
+        margin-left: auto;
+        margin-right: auto;
+
+        &:hover::before, &:focus::before {
+            opacity: 1;
+        }
+    }
+
+    &--primary {
+        background-color: $color-secondary;
+        color: #fff;
+    }
+}

@@ -1,5 +1,11 @@
+@mixin mid-screen {
+    @media only screen and (min-width: map-get($breakpoints, mid-screen)) {
+        @content;
+    }
+} 
+
 @mixin wide-screen {
-    @media only screen and (min-width: $breakpoint) {
+    @media only screen and (min-width: map-get($breakpoints, wide-screen)) {
         @content;
     }
 }

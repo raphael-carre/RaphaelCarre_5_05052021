@@ -1,0 +1,29 @@
+section:first-of-type {
+    margin-top: 79px;
+
+    @include wide-screen {
+        margin-top: 0;
+    }
+}
+
+#product-list {
+    @extend %flex-row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+
+    h2 {
+        align-self: flex-start;
+        flex-basis: 100%;
+        margin-top: 0;
+        margin-bottom: 1em;
+        @include wide-screen {
+            margin-bottom: 2em;
+        }
+        padding: 2em 0;
+        text-align: center;
+        background-color: $color-secondary;
+        color: #fff;
+    }
+}
