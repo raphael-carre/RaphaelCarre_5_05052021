@@ -1,0 +1,21 @@
+#product-counter {
+    display: block;
+    position: absolute;
+    margin: 0.3rem;
+    padding: .3rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    top: 0;
+    right: 0;
+    background-color: $color-tertiary;
+    border: 1px solid $color-secondary;
+    border-radius: 50%;
+    color: #000;
+    font-size: .8rem;
+    text-align: center;
+    z-index: 3;
+}
+
+.hidden {
+    opacity: 0;
+}

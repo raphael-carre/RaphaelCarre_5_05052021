@@ -1,4 +1,4 @@
-import Cart from './Cart.class'
+import Cart from './Cart'
 
 /**
  * Classe utilitaire permettant de créer les éléments HTML nécessaires à l'application.
@@ -24,7 +24,7 @@ export default class HtmlFactory {
 
         const price = document.createElement('span')
         price.classList.add('product-list-card__price')
-        price.textContent = this.#formatPrice(product.price)
+        price.textContent = this._formatPrice(product.price)
 
         const info = document.createElement('div')
         info.classList.add('product-list-card__info')
@@ -44,7 +44,7 @@ export default class HtmlFactory {
         info.appendChild(name)
         info.appendChild(description)
 
-        this.#addToContainer(card, 'main', 'product-list')
+        this._addToContainer(card, 'main', 'product-list')
     }
 
     /**
@@ -74,12 +74,12 @@ export default class HtmlFactory {
         
         const price = document.createElement('p')
         price.classList.add('product__price')
-        price.textContent = this.#formatPrice(product.price)
+        price.textContent = this._formatPrice(product.price)
 
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
         form.id = 'addToCartForm'
-        form.addEventListener('submit', function(e) { Cart.addToCart(e) })
+        form.addEventListener('submit', Cart.addToCart.bind(Cart))
 
         const inputHidden = document.createElement('input')
         inputHidden.setAttribute('type', 'hidden')
@@ -140,7 +140,7 @@ export default class HtmlFactory {
         formField2.appendChild(labelQuantity)
         formField2.appendChild(inputQuantity)
 
-        this.#addToContainer(card, 'main', 'product-section')
+        this._addToContainer(card, 'main', 'product-section')
     }
 
     /**
@@ -148,7 +148,7 @@ export default class HtmlFactory {
      * @param {Number} price 
      * @returns {String} Renvoie une chaîne de caractères.
      */
-    static #formatPrice(price) {
+    static _formatPrice(price) {
         return price = `${(price / 100).toString()} €`
     }
 
@@ -158,7 +158,7 @@ export default class HtmlFactory {
      * @param {String} targetId
      * @param {String} cssClass 
      */
-    static #addToContainer(element, targetId, cssClass) {
+    static _addToContainer(element, targetId, cssClass) {
         const target = document.getElementById(targetId)
         target.classList.add(cssClass)
         target.appendChild(element)

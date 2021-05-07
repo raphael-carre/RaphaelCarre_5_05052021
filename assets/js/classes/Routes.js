@@ -1,5 +1,5 @@
-import Request from './Request.class'
-import HtmlFactory from './HtmlFactory.class'
+import Request from './Request'
+import HtmlFactory from './HtmlFactory'
 
 /**
  * Routes de l'application.
