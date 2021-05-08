@@ -4,18 +4,25 @@ const miniExtractTextPlugin = require("mini-css-extract-plugin")
 const dev = process.env.NODE_ENV === "development"
 
 let cssLoaders = [{
-    loader: "css-loader"
+    loader: "css-loader",
+    options: {
+        importLoaders: 1
+    }
 }]
 
 if (!dev) {
     cssLoaders.push({
         loader: 'postcss-loader',
         options: {
-            plugins: (loader) => [
-                require('autoprefixer')({
-                    overrideBrowserslist: ['last 2 versions', 'ie > 8']
-                })
-            ]
+            postcssOptions: {
+                plugins: [
+                    require('autoprefixer')({
+                        overrideBrowserslist: [
+                            'last 2 versions', 'ie > 8'
+                        ]
+                    })
+                ]
+            }
         }
     })
 }
@@ -89,21 +96,21 @@ let config = {
             }
         ]
     },
-    devServer: {
-        host: '0.0.0.0',
-        port: 8080,
-        overlay: {
-            warnings: true,
-            errors: true
-        },
-        hot: true,
-        inline: true,
-        // proxy: {
-        //     '**': {
-        //         target: "localhost",
-        //     }
-        // }
-    },
+    // devServer: {
+    //     host: '0.0.0.0',
+    //     port: 8080,
+    //     overlay: {
+    //         warnings: true,
+    //         errors: true
+    //     },
+    //     hot: true,
+    //     inline: true,
+    //     proxy: {
+    //         '**': {
+    //             target: "localhost",
+    //         }
+    //     }
+    // },
     plugins: [
         new Webpack.DefinePlugin({
             'process_env': {

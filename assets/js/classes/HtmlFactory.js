@@ -189,6 +189,7 @@ export default class HtmlFactory {
             resetButton.setAttribute('type', 'reset')
             resetButton.className = 'btn'
             resetButton.textContent = 'Vider mon panier'
+            resetButton.addEventListener('click', Cart.resetCart.bind(Cart))
             const buyButton = document.createElement('button')
             buyButton.setAttribute('type', 'submit')
             buyButton.className = 'btn'
@@ -213,15 +214,15 @@ export default class HtmlFactory {
 
             const cart = JSON.parse(currentCart)
 
-            cart.map(item => {
-                this._createTableRow(item, apiUrl)
+            cart.map((item, index) => {
+                this._createCartTableRow(item, index, apiUrl)
                     .then(element => { tableBody.appendChild(element) })
                     .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
             })
 
-            this._totalPrice(cart, apiUrl)
+            Cart.totalPrice(cart, apiUrl)
                 .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
-                .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+                .catch(error => { alert(`Test Il y a eu une erreur !\n${error}`) })
         }
 
         this._addToContainer(form, 'main', 'cart')
@@ -230,10 +231,11 @@ export default class HtmlFactory {
     /**
      * Permet de créer une ligne de tableau HTML à partir des données fournies en paramètre.
      * @param {Object} item Objet contenant les informations d'un produit enregistré dans le panier
+     * @param {Number} index Index de l'élément dans le tableau d'origine
      * @param {String} apiUrl endpoint
      * @returns {Promise} Promesse contenant la ligne de tableau à insérer, ou une erreur
      */
-    static async _createTableRow(item, apiUrl) {
+    static async _createCartTableRow(item, index, apiUrl) {
         const tableRow = document.createElement('tr')
         const td1 = document.createElement('td')
         const td2 = document.createElement('td')
@@ -242,9 +244,14 @@ export default class HtmlFactory {
         const td5 = document.createElement('td')
         const td6 = document.createElement('td')
 
+        const deleteLink = document.createElement('a')
+        deleteLink.setAttribute('href', '#')
+        deleteLink.setAttribute('title', 'Supprimer l\'article')
+
         const deleteImage = document.createElement('img')
-        deleteImage.src = require('@img/trashCan.svg')
-        deleteImage.className = 'delete-item'
+        deleteImage.src = require('@img/trashCan.svg').default
+        deleteImage.className = 'cart__delete-item'
+        deleteImage.setAttribute('alt', 'Une poubelle')
 
         await Request.getDatas(`${apiUrl}/${item.id}`)
             .then(values => {
@@ -259,7 +266,10 @@ export default class HtmlFactory {
                 tableRow.appendChild(td5)
                 td5.textContent = this._formatPrice(parseInt(values.price) * item.quantity)
                 tableRow.appendChild(td6)
-                td6.appendChild(deleteImage)
+                td6.appendChild(deleteLink)
+                deleteLink.setAttribute('data-index', index)
+                deleteLink.addEventListener('click', (e) => { Cart.deleteItemFromCart(e, apiUrl) }, false)
+                deleteLink.appendChild(deleteImage)
             })
 
         return tableRow
@@ -284,23 +294,5 @@ export default class HtmlFactory {
      */
     static _formatPrice(price) {
         return price = `${(price / 100).toString()} €`
-    }
-
-    /**
-     * Calcule le montant total du panier.
-     * @param {Array} cart Contenu du panier sous forme de tableau
-     * @param {String} apiUrl endpoint
-     * @returns {Response} Retourne une réponse contenant le prix total
-     */
-    static async _totalPrice(cart, apiUrl) {
-        let totalPrice = 0
-        for (let item of cart) {
-            await Request.getDatas(`${apiUrl}/${item.id}`)
-                .then(values => {
-                    totalPrice += item.quantity * values.price
-                })
-        }
-
-        return totalPrice
     }
 }

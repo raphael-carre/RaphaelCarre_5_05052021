@@ -40,14 +40,14 @@ section:first-of-type {
     @extend %flex-row;
 }
 
-#cart {
-    margin: 0 auto;
-}
-
 .cart {
+    margin: 0 auto;
+    height: 100%;
     font-size: .8rem;
 
     @include wide-screen {
+        display: flex;
+        justify-content: center;
         font-size: initial;
     }
 
@@ -66,7 +66,7 @@ section:first-of-type {
 
         border-collapse: collapse;
 
-        thead {
+        thead, tbody {
             border-bottom: 2px solid $color-secondary;
         }
 
@@ -104,6 +104,10 @@ section:first-of-type {
         }
     }
 
+    &__delete-item {
+        width: 2em;
+    }
+
     &__total {
         font-weight: bold;
         text-align: center;
@@ -127,6 +131,7 @@ section:first-of-type {
             flex-direction: row;
 
             [type=reset], [type=submit] {
+                margin-top: 0;
                 order: initial;
             }
         }

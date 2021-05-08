@@ -1,8 +1,9 @@
+import Request from './Request'
+
 /**
  * Gestion du panier client.
  */
 export default class Cart {
-
     /**
      * Insère les données (première insertion ou mise à jour) dans le panier (LocalStorage),
      * et met à jour le compteur dans le header.
@@ -20,6 +21,103 @@ export default class Cart {
         }
 
         this.headerNotification()
+    }
+
+    /**
+     * Supprime un élément du panier (LocalStorage et tableau HTML) et met à jour l'info bulle du header
+     * @param {Event} e 
+     * @param {String} apiUrl endpoint
+     */
+    static deleteItemFromCart(e, apiUrl) {
+        e.preventDefault()
+
+        const response = confirm('Êtes-vous sûr de vouloir supprimer cet article ?')
+
+        if (response) {
+            const lineToDelete = e.target.parentNode.parentNode.parentNode
+            const lineParent = lineToDelete.parentNode
+            const indexToDelete = parseInt(e.target.parentNode.getAttribute('data-index'))
+            const totalElement = document.querySelector('.cart__total')
+            const currentCart = JSON.parse(localStorage.getItem('cart'))
+
+            let newCart = []
+            currentCart.map((item, index) => { index !== indexToDelete && newCart.push(item) })
+
+            if (newCart.length === 0) {
+                localStorage.clear()
+
+                const buyForm = document.getElementById('buyForm')
+                document.getElementById('main').removeChild(buyForm)
+            } else {
+                localStorage.setItem('cart', JSON.stringify(newCart))
+                lineParent.removeChild(lineToDelete)
+                
+                this.totalPrice(newCart, apiUrl)
+                    .then(value => totalElement.textContent = `Total : ${value / 100} €`)
+                    .catch(error => {alert(`Test Il y a eu une erreur !\n${error}`)})
+            }
+
+            this.headerNotification()
+        }
+    }
+
+    /**
+     * Dénombre la quantité d'articles dans le panier et affiche une info-bulle dans le header.
+     * Supprime l'infobulle si le panier est vide.
+     */
+    static headerNotification() {
+        const counter = document.getElementById('product-counter')
+
+        if (localStorage.getItem('cart')) {
+            const cartContent = JSON.parse(localStorage.getItem('cart'))
+            const totalProducts = cartContent.reduce((acc, item) => acc + item.quantity, 0)
+
+            if (totalProducts > 0) {
+                counter.classList.contains('hidden') && counter.classList.remove('hidden')
+                counter.textContent = totalProducts
+            }
+            return
+        }
+
+        counter.classList.add('hidden')
+        counter.textContent = ''
+    }
+
+    /**
+     * Réinitialise le panier, supprime le tableau d'articles et rafraichi l'info-bulle du header
+     * après confirmation.
+     * @param {Event} e 
+     */
+    static resetCart(e) {
+        e.preventDefault()
+        const response = confirm('Êtes-vous sûr de vouloir vider votre panier ?')
+        if (response) {
+            const main = document.getElementById('main')
+            const buyForm = document.getElementById('buyForm')
+            main.removeChild(buyForm)
+            localStorage.clear()
+            this.headerNotification()
+        }
+    }
+
+    /**
+     * Calcule le montant total du panier.
+     * @param {Array} cart Contenu du panier sous forme de tableau
+     * @param {String} apiUrl endpoint
+     * @returns {Response} Retourne une réponse contenant le prix total
+     */
+    static async totalPrice(cart, apiUrl) {
+        // console.log(apiUrl)
+        // console.log(cart)
+        let totalPrice = 0
+        for (let item of cart) {
+            await Request.getDatas(`${apiUrl}/${item.id}`)
+                .then(values => {
+                    totalPrice += item.quantity * values.price
+                })
+        }
+
+        return totalPrice
     }
 
     /**
@@ -51,7 +149,7 @@ export default class Cart {
     static _updateCartContent(newDatas) {
         let actualCart = JSON.parse(localStorage.getItem('cart'))
         const filteredItem = actualCart.filter(product => product.id === newDatas.id && product.option === newDatas.option)
-        
+
         if (filteredItem.length !== 0) {
             actualCart.map(item => {
                 if (item === filteredItem[0]) { item.quantity += newDatas.quantity }
@@ -61,21 +159,5 @@ export default class Cart {
         }
 
         return actualCart
-    }
-
-    /**
-     * Dénombre la quantité d'articles dans le panier et affiche une info-bulle dans le header.
-     */
-    static headerNotification() {
-        if (localStorage.getItem('cart')) {
-            const cartContent = JSON.parse(localStorage.getItem('cart'))
-            const totalProducts = cartContent.reduce((acc, item) => acc + item.quantity, 0)
-
-            const counter = document.getElementById('product-counter')
-            if (totalProducts > 0) {
-                counter.classList.contains('hidden') && counter.classList.remove('hidden')
-                counter.textContent = totalProducts
-            }
-        }
     }
 }
