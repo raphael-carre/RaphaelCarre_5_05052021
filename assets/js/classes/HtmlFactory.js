@@ -11,30 +11,30 @@ export default class HtmlFactory {
      */
     static displayProductFromList(product) {
         const card = document.createElement('div')
-        card.classList.add('product-list-card')
+        card.className = 'product-list-card'
 
         const link = document.createElement('a')
-        link.classList.add('product-list-card__link')
+        link.className = 'product-list-card__link'
         link.setAttribute("href", `article.html?id=${product._id}`)
         link.setAttribute("title", `${product.name} - Voir la fiche produit`)
 
         const imageCanvas = document.createElement('div')
-        imageCanvas.classList.add('product-list-card__image-canvas')
+        imageCanvas.className = 'product-list-card__image-canvas'
         imageCanvas.style.backgroundImage = `url(${product.imageUrl})`
 
         const price = document.createElement('span')
-        price.classList.add('product-list-card__price')
+        price.className = 'product-list-card__price'
         price.textContent = this._formatPrice(product.price)
 
         const info = document.createElement('div')
-        info.classList.add('product-list-card__info')
+        info.className = 'product-list-card__info'
 
         const name = document.createElement('h3')
-        name.classList.add('product-list-card__name')
+        name.className = 'product-list-card__name'
         name.textContent = product.name
 
         const description = document.createElement('p')
-        description.classList.add('product-list-card__description')
+        description.className = 'product-list-card__description'
         description.textContent = product.description
 
         card.appendChild(link)
@@ -54,10 +54,10 @@ export default class HtmlFactory {
      */
     static displayOneProduct(product) {
         const card = document.createElement('div')
-        card.classList.add('product')
+        card.className = 'product'
 
         const image = document.createElement('img')
-        image.classList.add('product__image')
+        image.className = 'product__image'
         image.setAttribute("src", product.imageUrl)
         image.setAttribute("alt", product.name)
 
@@ -65,15 +65,15 @@ export default class HtmlFactory {
         info.classList.add('product__info')
 
         const title = document.createElement('h3')
-        title.classList.add('product__title')
+        title.className = 'product__title'
         title.textContent = product.name
         
         const description = document.createElement('p')
-        description.classList.add('product_description')
+        description.className = 'product_description'
         description.textContent = product.description
         
         const price = document.createElement('p')
-        price.classList.add('product__price')
+        price.className = 'product__price'
         price.textContent = this._formatPrice(product.price)
 
         const form = document.createElement('form')
@@ -120,7 +120,7 @@ export default class HtmlFactory {
         inputQuantity.id = 'quantity'
 
         const buttonSubmit = document.createElement('button')
-        buttonSubmit.classList.add('btn')
+        buttonSubmit.className = 'btn'
         buttonSubmit.classList.add('btn--primary')
         buttonSubmit.setAttribute('type', 'submit')
         buttonSubmit.textContent = 'Ajouter au panier'

@@ -1,17 +1,13 @@
 section:first-of-type {
-    margin-top: 79px;
+    margin-top: 75px;
+
+    @include mid-screen {
+        margin-top: 79px;
+    }
 
     @include wide-screen {
         margin-top: 0;
     }
-}
-
-.product-list {
-    @extend %flex-row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;
-    height: 100%;
 
     h2 {
         align-self: flex-start;
@@ -26,4 +22,17 @@ section:first-of-type {
         background-color: $color-secondary;
         color: #fff;
     }
+}
+
+#main {
+    margin: 0 auto;
+    max-width: 1024px;
+}
+
+.product-list {
+    @extend %flex-row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
 }
