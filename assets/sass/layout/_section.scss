@@ -8,20 +8,19 @@ section:first-of-type {
     @include wide-screen {
         margin-top: 0;
     }
+}
 
-    h2 {
-        align-self: flex-start;
-        flex-basis: 100%;
-        margin-top: 0;
-        margin-bottom: 1em;
-        @include wide-screen {
-            margin-bottom: 2em;
-        }
-        padding: 2em 0;
-        text-align: center;
-        background-color: $color-secondary;
-        color: #fff;
+.home-title {
+    align-self: flex-start;
+    flex-basis: 100%;
+    margin-top: 0;
+    margin-bottom: 1em;
+    @include wide-screen {
+        margin-bottom: 2em;
     }
+    padding: 2em 0;
+    background-color: $color-secondary;
+    color: #fff;
 }
 
 #main {
@@ -35,4 +34,101 @@ section:first-of-type {
     justify-content: space-evenly;
     align-items: center;
     height: 100%;
+}
+
+#addToCartForm > div {
+    @extend %flex-row;
+}
+
+#cart {
+    margin: 0 auto;
+}
+
+.cart {
+    font-size: .8rem;
+
+    @include wide-screen {
+        font-size: initial;
+    }
+
+    &__title {
+        margin-top: 2em;
+    }
+
+    &__table {
+        margin: 2em auto 1em auto;
+        width: 100%;
+        font-size: inherit;
+        
+        @include wide-screen {
+            width: initial;
+        }
+
+        border-collapse: collapse;
+
+        thead {
+            border-bottom: 2px solid $color-secondary;
+        }
+
+        td, th {
+            padding: .5em .3em;
+
+            @include wide-screen {
+                padding: .7em 1em;
+            }
+            text-align: center;
+
+            &:first-of-type {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            &:first-of-type, &:nth-of-type(2) {
+                text-align: left;
+            }
+        }
+
+        td {
+            &:nth-of-type(4), &:nth-of-type(5) {
+                text-align: right;
+            }
+        }
+
+        td:nth-of-type(4), th:nth-of-type(4) {
+            display: none;
+
+            @include mid-screen {
+                display: table-cell;
+            }
+        }
+    }
+
+    &__total {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    &__button-div {
+
+        @extend %flex-col;
+        padding: 1em;
+
+        [type=reset] {
+            margin-top: 1em;
+            order: 2;
+        }
+
+        [type=submit] {
+            order: 1;
+        }
+
+        @include wide-screen {
+            flex-direction: row;
+
+            [type=reset], [type=submit] {
+                order: initial;
+            }
+        }
+    }
 }

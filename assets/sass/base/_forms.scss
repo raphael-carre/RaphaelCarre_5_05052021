@@ -2,10 +2,6 @@ form > * + * {
     margin-top: 1em;
 }
 
-form div {
-    @extend %flex-row;
-}
-
 label, input, select {
     display: inline-block;
     padding: .7em 1em;

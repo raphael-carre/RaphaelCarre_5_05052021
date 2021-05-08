@@ -1,4 +1,5 @@
 import Cart from './Cart'
+import Request from './Request'
 
 /**
  * Classe utilitaire permettant de créer les éléments HTML nécessaires à l'application.
@@ -144,12 +145,124 @@ export default class HtmlFactory {
     }
 
     /**
-     * Change un prix de centimes en euros et converti en chaîne de caractères.
-     * @param {Number} price 
-     * @returns {String} Renvoie une chaîne de caractères.
+     * Créé un tableau HTML complet contenant les informations contenues dans le panier,
+     * ainsi que le formulaire pour valider la commande.
+     * @param {String} apiUrl endpoint
      */
-    static _formatPrice(price) {
-        return price = `${(price / 100).toString()} €`
+    static displayCart(apiUrl) {
+        const currentCart = localStorage.getItem('cart')
+
+        const form = document.createElement('form')
+        form.setAttribute('method', 'POST')
+        form.id = 'buyForm'
+
+        if (currentCart) {
+            const h2 = document.createElement("h2")
+            h2.className = "cart__title"
+            h2.textContent = 'Contenu de votre panier'
+
+            const table = document.createElement('table')
+            table.className = 'cart__table'
+            const tableHead = document.createElement('thead')
+            const tableHeadRow = document.createElement('tr')
+            const tableHeadCol1 = document.createElement('th')
+            tableHeadCol1.textContent = 'Article'
+            const tableHeadCol2 = document.createElement('th')
+            tableHeadCol2.textContent = 'Couleur'
+            const tableHeadCol3 = document.createElement('th')
+            tableHeadCol3.textContent = 'Quantité'
+            const tableHeadCol4 = document.createElement('th')
+            tableHeadCol4.textContent = 'Prix unitaire'
+            const tableHeadCol5 = document.createElement('th')
+            tableHeadCol5.textContent = 'Prix total'
+            const tableHeadCol6 = document.createElement('th')
+            tableHeadCol6.textContent = 'Supprimer'
+            
+            const tableBody = document.createElement('tbody')
+
+            const totalElement = document.createElement('p')
+            totalElement.className = 'cart__total'
+
+            const buttonDiv = document.createElement('div')
+            buttonDiv.className = 'cart__button-div'
+            const resetButton = document.createElement('button')
+            resetButton.setAttribute('type', 'reset')
+            resetButton.className = 'btn'
+            resetButton.textContent = 'Vider mon panier'
+            const buyButton = document.createElement('button')
+            buyButton.setAttribute('type', 'submit')
+            buyButton.className = 'btn'
+            buyButton.classList.add('btn--primary')
+            buyButton.textContent = 'Valider ma commande'
+
+            form.appendChild(h2)
+            form.appendChild(table)
+            table.appendChild(tableHead)
+            tableHead.appendChild(tableHeadRow)
+            tableHeadRow.appendChild(tableHeadCol1)
+            tableHeadRow.appendChild(tableHeadCol2)
+            tableHeadRow.appendChild(tableHeadCol3)
+            tableHeadRow.appendChild(tableHeadCol4)
+            tableHeadRow.appendChild(tableHeadCol5)
+            tableHeadRow.appendChild(tableHeadCol6)
+            table.appendChild(tableBody)
+            form.appendChild(totalElement)
+            form.appendChild(buttonDiv)
+            buttonDiv.appendChild(resetButton)
+            buttonDiv.appendChild(buyButton)
+
+            const cart = JSON.parse(currentCart)
+
+            cart.map(item => {
+                this._createTableRow(item, apiUrl)
+                    .then(element => { tableBody.appendChild(element) })
+                    .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+            })
+
+            this._totalPrice(cart, apiUrl)
+                .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
+                .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+        }
+
+        this._addToContainer(form, 'main', 'cart')
+    }
+
+    /**
+     * Permet de créer une ligne de tableau HTML à partir des données fournies en paramètre.
+     * @param {Object} item Objet contenant les informations d'un produit enregistré dans le panier
+     * @param {String} apiUrl endpoint
+     * @returns {Promise} Promesse contenant la ligne de tableau à insérer, ou une erreur
+     */
+    static async _createTableRow(item, apiUrl) {
+        const tableRow = document.createElement('tr')
+        const td1 = document.createElement('td')
+        const td2 = document.createElement('td')
+        const td3 = document.createElement('td')
+        const td4 = document.createElement('td')
+        const td5 = document.createElement('td')
+        const td6 = document.createElement('td')
+
+        const deleteImage = document.createElement('img')
+        deleteImage.src = require('@img/trashCan.svg')
+        deleteImage.className = 'delete-item'
+
+        await Request.getDatas(`${apiUrl}/${item.id}`)
+            .then(values => {
+                tableRow.appendChild(td1)
+                td1.textContent = values.name
+                tableRow.appendChild(td2)
+                td2.textContent = item.option
+                tableRow.appendChild(td3)
+                td3.textContent = item.quantity
+                tableRow.appendChild(td4)
+                td4.textContent = this._formatPrice(values.price)
+                tableRow.appendChild(td5)
+                td5.textContent = this._formatPrice(parseInt(values.price) * item.quantity)
+                tableRow.appendChild(td6)
+                td6.appendChild(deleteImage)
+            })
+
+        return tableRow
     }
 
     /**
@@ -162,5 +275,32 @@ export default class HtmlFactory {
         const target = document.getElementById(targetId)
         target.classList.add(cssClass)
         target.appendChild(element)
+    }
+
+    /**
+     * Change un prix de centimes en euros et converti en chaîne de caractères.
+     * @param {Number} price 
+     * @returns {String} Renvoie une chaîne de caractères.
+     */
+    static _formatPrice(price) {
+        return price = `${(price / 100).toString()} €`
+    }
+
+    /**
+     * Calcule le montant total du panier.
+     * @param {Array} cart Contenu du panier sous forme de tableau
+     * @param {String} apiUrl endpoint
+     * @returns {Response} Retourne une réponse contenant le prix total
+     */
+    static async _totalPrice(cart, apiUrl) {
+        let totalPrice = 0
+        for (let item of cart) {
+            await Request.getDatas(`${apiUrl}/${item.id}`)
+                .then(values => {
+                    totalPrice += item.quantity * values.price
+                })
+        }
+
+        return totalPrice
     }
 }

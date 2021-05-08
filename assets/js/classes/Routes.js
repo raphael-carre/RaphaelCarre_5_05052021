@@ -24,4 +24,13 @@ export default class Routes {
             .then(values => { HtmlFactory.displayOneProduct(values) })
             .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
     }
+
+    /**
+     * Route pour la page panier.html.
+     * @param {String} apiUrl endpoint
+     * @returns 
+     */
+    static panier(apiUrl) {
+        HtmlFactory.displayCart(apiUrl)
+    }
 }

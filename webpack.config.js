@@ -39,7 +39,7 @@ let config = {
     },
     resolve: {
         alias: {
-            "@img": path.resolve(__dirname, "assets/images/"),
+            "@img": path.resolve("./assets/images/"),
             "@js": path.resolve("./assets/js/"),
             "@css": path.resolve("./assets/sass/")
         }
@@ -88,6 +88,21 @@ let config = {
                 ]
             }
         ]
+    },
+    devServer: {
+        host: '0.0.0.0',
+        port: 8080,
+        overlay: {
+            warnings: true,
+            errors: true
+        },
+        hot: true,
+        inline: true,
+        // proxy: {
+        //     '**': {
+        //         target: "localhost",
+        //     }
+        // }
     },
     plugins: [
         new Webpack.DefinePlugin({
