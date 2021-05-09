@@ -116,7 +116,6 @@ export default class HtmlFactory {
         inputQuantity.setAttribute('type', 'number')
         inputQuantity.setAttribute('name', 'quantity')
         inputQuantity.setAttribute('min', '1')
-        inputQuantity.setAttribute('max', '10')
         inputQuantity.setAttribute('value', '1')
         inputQuantity.id = 'quantity'
 

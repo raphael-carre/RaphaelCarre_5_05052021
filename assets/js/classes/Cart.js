@@ -37,19 +37,32 @@ export default class Cart {
             const totalElement = document.querySelector('.cart__total')
             const currentCart = JSON.parse(localStorage.getItem('cart'))
 
+            // Création d'un nouveau panier sans le produit à supprimer
             let newCart = []
             currentCart.map((item, index) => { index !== indexToDelete && newCart.push(item) })
 
             if (newCart.length === 0) {
+                // Vide le LocalStorage et affiche le panier vide
                 localStorage.clear()
 
                 const buyForm = document.getElementById('buyForm')
                 document.getElementById('main').removeChild(buyForm)
                 HtmlFactory.displayEmptyCart()
             } else {
+                // Mise à jour du LocalStorage
                 localStorage.setItem('cart', JSON.stringify(newCart))
+
+                // Actualise les index des éléments suivant celui à supprimer
+                let nextSibling = lineToDelete.nextElementSibling
+                while (nextSibling) {
+                    const indexElement = nextSibling.querySelector('[data-index]')
+                    const index = parseInt(indexElement.getAttribute('data-index'))
+                    indexElement.setAttribute('data-index', index - 1)
+                    nextSibling = nextSibling.nextElementSibling
+                }
                 lineParent.removeChild(lineToDelete)
                 
+                // Recalcul du prix total
                 this.totalPrice(newCart, apiUrl)
                     .then(value => totalElement.textContent = `Total : ${value / 100} €`)
                     .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
@@ -86,19 +99,12 @@ export default class Cart {
      * @param {Event} e 
      */
     static resetCart() {
-        // e.preventDefault()
-        // const response = confirm('Êtes-vous sûr de vouloir vider votre panier ?')
-        // const response = HtmlFactory.showModal('Êtes-vous sûr de vouloir vider votre panier ?', 'confirm')
-        // console.log(response)
-        // debugger
-        // if (response) {
-            const main = document.getElementById('main')
-            const buyForm = document.getElementById('buyForm')
-            main.removeChild(buyForm)
-            HtmlFactory.displayEmptyCart()
-            localStorage.clear()
-            this.headerNotification()
-        // }
+        const main = document.getElementById('main')
+        const buyForm = document.getElementById('buyForm')
+        main.removeChild(buyForm)
+        HtmlFactory.displayEmptyCart()
+        localStorage.clear()
+        this.headerNotification()
     }
 
     /**
