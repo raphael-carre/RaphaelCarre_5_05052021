@@ -5,7 +5,7 @@ form > * + * {
 label, input, select {
     display: inline-block;
     padding: .7em 1em;
-    border: 1px solid $color-secondary;
+    border: 1px solid $color-primary;
 }
 
 label {
@@ -19,7 +19,7 @@ label {
 }
 
 input, select {
-    flex: 1 1 auto;
+    width: 80%;
     border-left: none;
     border-top-left-radius: 0;
     border-top-right-radius: $border-radius;

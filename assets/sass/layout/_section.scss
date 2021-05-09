@@ -41,6 +41,10 @@ section:first-of-type {
     @extend %flex-row;
 }
 
+#buyForm {
+    width: 100%;
+}
+
 .cart {
     margin: 0 auto;
     height: 100%;
@@ -62,7 +66,7 @@ section:first-of-type {
         font-size: inherit;
         
         @include wide-screen {
-            width: initial;
+            width: 80%;
         }
 
         border-collapse: collapse;
@@ -135,6 +139,30 @@ section:first-of-type {
                 margin-top: 0;
                 order: initial;
             }
+        }
+    }
+
+    &__details {
+        margin: 2em auto 0 auto;
+        padding: 0 1em;
+        font-size: 1rem;
+
+        > * + * {
+            margin-top: 0.5em;
+        }
+
+        > div {
+            @extend %flex-row;
+        }
+
+        @include wide-screen {
+            width: 80%;
+            padding: 0;
+        }
+
+        &__title {
+            margin-top: 2em;
+            margin-bottom: 1em;
         }
     }
 }

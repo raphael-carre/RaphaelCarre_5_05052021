@@ -154,6 +154,7 @@ export default class HtmlFactory {
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
         form.id = 'buyForm'
+        form.addEventListener('submit', Cart.buyCartContent)
 
         if (currentCart) {
             const h2 = document.createElement("h2")
@@ -209,6 +210,9 @@ export default class HtmlFactory {
             tableHeadRow.appendChild(tableHeadCol6)
             table.appendChild(tableBody)
             form.appendChild(totalElement)
+            
+            form.appendChild(this.showDetailsForm())
+            
             form.appendChild(buttonDiv)
             buttonDiv.appendChild(resetButton)
             buttonDiv.appendChild(buyButton)
@@ -252,6 +256,78 @@ export default class HtmlFactory {
 
         main.classList.contains('cart') && main.classList.remove('cart')
         this._addToContainer(content, 'main', 'empty-cart')
+    }
+
+    /**
+     * Retourne les champs de formulaire pour passer commande.
+     * @returns {HTMLElement}
+     */
+    static showDetailsForm() {
+        const detailsForm = document.createElement('div')
+        detailsForm.className = 'cart__details'
+
+        const detailsTitle = document.createElement('h2')
+        detailsTitle.className = 'cart__details__title'
+        detailsTitle.textContent = 'Mes coordonnées'
+
+        const lastNameDiv = document.createElement('div')
+        const lastNameLabel = document.createElement('label')
+        lastNameLabel.textContent = 'Nom'
+        const lastNameInput = document.createElement('input')
+        lastNameInput.setAttribute('type', 'text')
+        lastNameInput.setAttribute('name', 'lastName')
+        lastNameInput.setAttribute('required', 'true')
+
+        const firstNameDiv = document.createElement('div')
+        const firstNameLabel = document.createElement('label')
+        firstNameLabel.textContent = 'Prénom'
+        const firstNameInput = document.createElement('input')
+        firstNameInput.setAttribute('type', 'text')
+        firstNameInput.setAttribute('name', 'firstName')
+        firstNameInput.setAttribute('required', 'true')
+
+        const emailDiv = document.createElement('div')
+        const emailLabel = document.createElement('label')
+        emailLabel.textContent = 'E-mail'
+        const emailInput = document.createElement('input')
+        emailInput.setAttribute('type', 'email')
+        emailInput.setAttribute('name', 'email')
+        emailInput.setAttribute('required', 'true')
+
+        const addressDiv = document.createElement('div')
+        const addressLabel = document.createElement('label')
+        addressLabel.textContent = 'Adresse'
+        const addressInput = document.createElement('input')
+        addressInput.setAttribute('type', 'text')
+        addressInput.setAttribute('name', 'address')
+        addressInput.setAttribute('required', 'true')
+
+        const cityDiv = document.createElement('div')
+        const cityLabel = document.createElement('label')
+        cityLabel.textContent = 'Ville'
+        const cityInput = document.createElement('input')
+        cityInput.setAttribute('type', 'text')
+        cityInput.setAttribute('name', 'city')
+        cityInput.setAttribute('required', 'true')
+
+        detailsForm.appendChild(detailsTitle)
+        detailsForm.appendChild(lastNameDiv)
+        lastNameDiv.appendChild(lastNameLabel)
+        lastNameDiv.appendChild(lastNameInput)
+        detailsForm.appendChild(firstNameDiv)
+        firstNameDiv.appendChild(firstNameLabel)
+        firstNameDiv.appendChild(firstNameInput)
+        detailsForm.appendChild(emailDiv)
+        emailDiv.appendChild(emailLabel)
+        emailDiv.appendChild(emailInput)
+        detailsForm.appendChild(addressDiv)
+        addressDiv.appendChild(addressLabel)
+        addressDiv.appendChild(addressInput)
+        detailsForm.appendChild(cityDiv)
+        cityDiv.appendChild(cityLabel)
+        cityDiv.appendChild(cityInput)
+
+        return detailsForm
     }
 
     /**

@@ -107,6 +107,25 @@ export default class Cart {
         this.headerNotification()
     }
 
+    static buyCartContent(e) {
+        e.preventDefault()
+
+        let contact = {}
+
+        for (let index of e.target) {
+            if (index.getAttribute('type') !== 'reset' && index.getAttribute('type') !== 'submit') {
+                contact[index.getAttribute('name')] = index.value
+            }
+        }
+
+        const payload = {
+            contact,
+            products: localStorage.getItem('cart')
+        }
+
+        console.log(payload)
+    }
+
     /**
      * Calcule le montant total du panier.
      * @param {Array} cart Contenu du panier sous forme de tableau
@@ -133,7 +152,7 @@ export default class Cart {
      */
     static _setNewCartItem(e) {
         const form = e.target
-        const datas = new Object()
+        const datas = {}
 
         for (let i = 0; i < form.length - 1; i++) {
             if (form[i].getAttribute('name') === 'quantity') {
