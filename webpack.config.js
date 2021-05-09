@@ -96,21 +96,16 @@ let config = {
             }
         ]
     },
-    // devServer: {
-    //     host: '0.0.0.0',
-    //     port: 8080,
-    //     overlay: {
-    //         warnings: true,
-    //         errors: true
-    //     },
-    //     hot: true,
-    //     inline: true,
-    //     proxy: {
-    //         '**': {
-    //             target: "localhost",
-    //         }
-    //     }
-    // },
+    devServer: {
+        host: '0.0.0.0',
+        port: 8080,
+        overlay: {
+            warnings: true,
+            errors: true
+        },
+        public: "macbook.local:8080",
+        bonjour: true
+    },
     plugins: [
         new Webpack.DefinePlugin({
             'process_env': {
