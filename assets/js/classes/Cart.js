@@ -1,3 +1,4 @@
+import HtmlFactory from './HtmlFactory'
 import Request from './Request'
 
 /**
@@ -48,6 +49,7 @@ export default class Cart {
 
                 const buyForm = document.getElementById('buyForm')
                 document.getElementById('main').removeChild(buyForm)
+                HtmlFactory.displayEmptyCart()
             } else {
                 localStorage.setItem('cart', JSON.stringify(newCart))
                 lineParent.removeChild(lineToDelete)
@@ -95,6 +97,7 @@ export default class Cart {
             const main = document.getElementById('main')
             const buyForm = document.getElementById('buyForm')
             main.removeChild(buyForm)
+            HtmlFactory.displayEmptyCart()
             localStorage.clear()
             this.headerNotification()
         }

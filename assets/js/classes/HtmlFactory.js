@@ -223,9 +223,34 @@ export default class HtmlFactory {
             Cart.totalPrice(cart, apiUrl)
                 .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
                 .catch(error => { alert(`Test Il y a eu une erreur !\n${error}`) })
-        }
 
-        this._addToContainer(form, 'main', 'cart')
+            this._addToContainer(form, 'main', 'cart')
+            return
+        } else {
+            this.displayEmptyCart()
+        }
+    }
+
+    /**
+     * Affichage par défault lorsque le panier est vide.
+     */
+    static displayEmptyCart() {
+        const main = document.getElementById('main')
+        const content = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.className = 'empty-cart__title'
+        h2.textContent = 'Votre panier est vide'
+
+        const p = document.createElement('p')
+        p.className = 'empty-cart__content'
+        p.textContent = 'Consultez notre catalogue !'
+
+        content.appendChild(h2)
+        content.appendChild(p)
+
+        main.classList.contains('cart') && main.classList.remove('cart')
+        this._addToContainer(content, 'main', 'empty-cart')
     }
 
     /**
@@ -281,9 +306,9 @@ export default class HtmlFactory {
      * @param {String} targetId
      * @param {String} cssClass 
      */
-    static _addToContainer(element, targetId, cssClass) {
+    static _addToContainer(element, targetId, cssClass = '') {
         const target = document.getElementById(targetId)
-        target.classList.add(cssClass)
+        cssClass !== '' && target.classList.add(cssClass)
         target.appendChild(element)
     }
 
