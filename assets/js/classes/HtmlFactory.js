@@ -189,7 +189,9 @@ export default class HtmlFactory {
             resetButton.setAttribute('type', 'reset')
             resetButton.className = 'btn'
             resetButton.textContent = 'Vider mon panier'
-            resetButton.addEventListener('click', Cart.resetCart.bind(Cart))
+            resetButton.addEventListener('click', e => {
+                this.showModal('Êtes-vous sûr de vouloir vider votre panier ? ', 'confirm', '', Cart.resetCart.bind(Cart))
+            })
             const buyButton = document.createElement('button')
             buyButton.setAttribute('type', 'submit')
             buyButton.className = 'btn'
@@ -217,12 +219,12 @@ export default class HtmlFactory {
             cart.map((item, index) => {
                 this._createCartTableRow(item, index, apiUrl)
                     .then(element => { tableBody.appendChild(element) })
-                    .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+                    .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
             })
 
             Cart.totalPrice(cart, apiUrl)
                 .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
-                .catch(error => { alert(`Test Il y a eu une erreur !\n${error}`) })
+                .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
 
             this._addToContainer(form, 'main', 'cart')
             return
@@ -251,6 +253,90 @@ export default class HtmlFactory {
 
         main.classList.contains('cart') && main.classList.remove('cart')
         this._addToContainer(content, 'main', 'empty-cart')
+    }
+
+    /**
+     * Affiche une fenêtre modale au dessus de l'application.
+     * @param {String} content Message devant apparaître dans la fenêtre modale
+     * @param {String} type Type de fenêtre modale (message - default-, error, confirm)
+     * @param {String} error Erreur à afficher lors d'une modale de type "error"
+     * @param {Function} callbackFunction Fonction callback à utiliser lors d'une modale de type "confirm"
+     */
+    static showModal(content, type = '', error = '', callbackFunction = '') {
+        const body = document.body
+
+        const overlay = document.createElement('div')
+        overlay.className = 'overlay'
+
+        const modal = document.createElement('div')
+        modal.className = 'modal'
+
+        const message = document.createElement('p')
+        message.className = 'modal__message'
+        message.textContent = content
+
+        const buttonDiv = document.createElement('div')
+        buttonDiv.className = 'modal__buttons'
+
+        const okButton = document.createElement('button')
+        okButton.className = 'btn'
+        okButton.textContent = 'OK'
+
+        const noButton = document.createElement('button')
+        noButton.className = 'btn'
+        noButton.textContent = 'non'
+
+        const yesButton = document.createElement('button')
+        yesButton.className = 'btn'
+        yesButton.classList.add('btn--primary')
+        yesButton.textContent = 'oui'
+
+        overlay.appendChild(modal)
+        modal.appendChild(message)
+
+        if (error !== '') {
+            const errorMessage = document.createElement('p')
+            errorMessage.className = 'modal__error'
+            errorMessage.textContent = error
+
+            modal.appendChild(errorMessage)
+        }
+        
+        switch(type) {
+            case 'error':
+                modal.appendChild(buttonDiv)
+                buttonDiv.appendChild(okButton)
+                okButton.addEventListener('click', this._hideModal)
+                break
+            case 'confirm':
+                modal.appendChild(buttonDiv)
+                buttonDiv.appendChild(noButton)
+                buttonDiv.appendChild(yesButton)
+
+                noButton.addEventListener('click', e => {
+                    this._hideModal(e)                    
+                })
+                yesButton.addEventListener('click', (e) => {
+                    callbackFunction()
+                    this._hideModal(e)
+                })
+                break
+            default:
+                setTimeout(this._hideModal, 1700)
+        }
+
+        body.appendChild(overlay)
+    }
+
+    /**
+     * Masque la fenêtre modale
+     * @param {Event} e (optionnel)
+     */
+    static _hideModal(e = '') {
+        e !== '' && e.preventDefault()
+        document.querySelector('.overlay').classList.add('fade-out')
+        const timeOut = setTimeout(() => { document.body.removeChild(document.querySelector('.overlay')) }, 200)
+        // clearTimeout(timeOut)
     }
 
     /**
@@ -293,7 +379,9 @@ export default class HtmlFactory {
                 tableRow.appendChild(td6)
                 td6.appendChild(deleteLink)
                 deleteLink.setAttribute('data-index', index)
-                deleteLink.addEventListener('click', (e) => { Cart.deleteItemFromCart(e, apiUrl) }, false)
+                deleteLink.addEventListener('click', e => {
+                    this.showModal('Êtes-vous sûr de vouloir supprimer cet article ?', 'confirm', '', () => {Cart.deleteItemFromCart(e, apiUrl)})
+                })
                 deleteLink.appendChild(deleteImage)
             })
 

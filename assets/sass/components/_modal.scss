@@ -1,0 +1,57 @@
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    @extend %flex-col;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,.3);
+    z-index: 5;
+    transition: opacity .2s linear;
+}
+
+.modal {
+    position: relative;
+    padding: 1em;
+    width: 400px;
+    border: 1px solid $color-secondary;
+    border-radius: 1em;
+    background-color: #fff;
+    z-index: 6;
+
+    > * + * {
+        margin-top: 1em;
+    }
+    
+
+    &__message, &__error {
+        text-align: center;
+    }
+
+    &__error {
+        color: red;
+    }
+
+    &__buttons {
+        @extend %flex-row;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: -0.5em;
+        left: -0.5em;
+        right: -0.5em;
+        bottom: -0.5em;
+        border-radius: inherit;
+        background-color: rgba(255,255,255,.3);
+        z-index: -1;
+    }
+}
+
+.overlay.fade-out {
+    opacity: 0;
+}

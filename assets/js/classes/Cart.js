@@ -22,6 +22,7 @@ export default class Cart {
         }
 
         this.headerNotification()
+        HtmlFactory.showModal('L\'article a bien été ajouté à votre panier')
     }
 
     /**
@@ -30,11 +31,6 @@ export default class Cart {
      * @param {String} apiUrl endpoint
      */
     static deleteItemFromCart(e, apiUrl) {
-        e.preventDefault()
-
-        const response = confirm('Êtes-vous sûr de vouloir supprimer cet article ?')
-
-        if (response) {
             const lineToDelete = e.target.parentNode.parentNode.parentNode
             const lineParent = lineToDelete.parentNode
             const indexToDelete = parseInt(e.target.parentNode.getAttribute('data-index'))
@@ -56,11 +52,10 @@ export default class Cart {
                 
                 this.totalPrice(newCart, apiUrl)
                     .then(value => totalElement.textContent = `Total : ${value / 100} €`)
-                    .catch(error => {alert(`Test Il y a eu une erreur !\n${error}`)})
+                    .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
             }
 
             this.headerNotification()
-        }
     }
 
     /**
@@ -90,17 +85,20 @@ export default class Cart {
      * après confirmation.
      * @param {Event} e 
      */
-    static resetCart(e) {
-        e.preventDefault()
-        const response = confirm('Êtes-vous sûr de vouloir vider votre panier ?')
-        if (response) {
+    static resetCart() {
+        // e.preventDefault()
+        // const response = confirm('Êtes-vous sûr de vouloir vider votre panier ?')
+        // const response = HtmlFactory.showModal('Êtes-vous sûr de vouloir vider votre panier ?', 'confirm')
+        // console.log(response)
+        // debugger
+        // if (response) {
             const main = document.getElementById('main')
             const buyForm = document.getElementById('buyForm')
             main.removeChild(buyForm)
             HtmlFactory.displayEmptyCart()
             localStorage.clear()
             this.headerNotification()
-        }
+        // }
     }
 
     /**
@@ -110,8 +108,6 @@ export default class Cart {
      * @returns {Response} Retourne une réponse contenant le prix total
      */
     static async totalPrice(cart, apiUrl) {
-        // console.log(apiUrl)
-        // console.log(cart)
         let totalPrice = 0
         for (let item of cart) {
             await Request.getDatas(`${apiUrl}/${item.id}`)

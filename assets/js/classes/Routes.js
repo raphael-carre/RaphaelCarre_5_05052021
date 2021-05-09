@@ -12,7 +12,7 @@ export default class Routes {
     static async index(apiUrl) {
         await Request.getDatas(apiUrl)
             .then(values => values.map(item => { HtmlFactory.displayProductFromList(item) }))
-            .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+            .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
 
     /**
@@ -22,7 +22,7 @@ export default class Routes {
     static async article(apiUrl) {
         await Request.getDatas(apiUrl)
             .then(values => { HtmlFactory.displayOneProduct(values) })
-            .catch(error => { alert(`Il y a eu une erreur !\n${error}`) })
+            .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
 
     /**
