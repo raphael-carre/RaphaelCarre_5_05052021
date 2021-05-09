@@ -84,7 +84,7 @@ export default class HtmlFactory {
 
         const inputHidden = document.createElement('input')
         inputHidden.setAttribute('type', 'hidden')
-        inputHidden.setAttribute('name', 'id')
+        inputHidden.setAttribute('name', '_id')
         inputHidden.setAttribute("value", product._id)
         inputHidden.id = 'id'
 
@@ -144,7 +144,7 @@ export default class HtmlFactory {
     }
 
     /**
-     * Créé un tableau HTML complet contenant les informations contenues dans le panier,
+     * Affiche un tableau HTML contenant les informations contenues dans le panier,
      * ainsi que le formulaire pour valider la commande.
      * @param {String} apiUrl endpoint
      */
@@ -157,28 +157,11 @@ export default class HtmlFactory {
         form.addEventListener('submit', Cart.buyCartContent)
 
         if (currentCart) {
+            const cart = JSON.parse(currentCart)
+
             const h2 = document.createElement("h2")
             h2.className = "cart__title"
             h2.textContent = 'Contenu de votre panier'
-
-            const table = document.createElement('table')
-            table.className = 'cart__table'
-            const tableHead = document.createElement('thead')
-            const tableHeadRow = document.createElement('tr')
-            const tableHeadCol1 = document.createElement('th')
-            tableHeadCol1.textContent = 'Article'
-            const tableHeadCol2 = document.createElement('th')
-            tableHeadCol2.textContent = 'Couleur'
-            const tableHeadCol3 = document.createElement('th')
-            tableHeadCol3.textContent = 'Quantité'
-            const tableHeadCol4 = document.createElement('th')
-            tableHeadCol4.textContent = 'Prix unitaire'
-            const tableHeadCol5 = document.createElement('th')
-            tableHeadCol5.textContent = 'Prix total'
-            const tableHeadCol6 = document.createElement('th')
-            tableHeadCol6.textContent = 'Supprimer'
-            
-            const tableBody = document.createElement('tbody')
 
             const totalElement = document.createElement('p')
             totalElement.className = 'cart__total'
@@ -199,31 +182,13 @@ export default class HtmlFactory {
             buyButton.textContent = 'Valider ma commande'
 
             form.appendChild(h2)
-            form.appendChild(table)
-            table.appendChild(tableHead)
-            tableHead.appendChild(tableHeadRow)
-            tableHeadRow.appendChild(tableHeadCol1)
-            tableHeadRow.appendChild(tableHeadCol2)
-            tableHeadRow.appendChild(tableHeadCol3)
-            tableHeadRow.appendChild(tableHeadCol4)
-            tableHeadRow.appendChild(tableHeadCol5)
-            tableHeadRow.appendChild(tableHeadCol6)
-            table.appendChild(tableBody)
+            form.appendChild(this._showCartTable(cart, apiUrl))
             form.appendChild(totalElement)
-            
-            form.appendChild(this.showDetailsForm())
+            form.appendChild(this._showDetailsForm())
             
             form.appendChild(buttonDiv)
             buttonDiv.appendChild(resetButton)
             buttonDiv.appendChild(buyButton)
-
-            const cart = JSON.parse(currentCart)
-
-            cart.map((item, index) => {
-                this._createCartTableRow(item, index, apiUrl)
-                    .then(element => { tableBody.appendChild(element) })
-                    .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
-            })
 
             Cart.totalPrice(cart, apiUrl)
                 .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
@@ -256,78 +221,6 @@ export default class HtmlFactory {
 
         main.classList.contains('cart') && main.classList.remove('cart')
         this._addToContainer(content, 'main', 'empty-cart')
-    }
-
-    /**
-     * Retourne les champs de formulaire pour passer commande.
-     * @returns {HTMLElement}
-     */
-    static showDetailsForm() {
-        const detailsForm = document.createElement('div')
-        detailsForm.className = 'cart__details'
-
-        const detailsTitle = document.createElement('h2')
-        detailsTitle.className = 'cart__details__title'
-        detailsTitle.textContent = 'Mes coordonnées'
-
-        const lastNameDiv = document.createElement('div')
-        const lastNameLabel = document.createElement('label')
-        lastNameLabel.textContent = 'Nom'
-        const lastNameInput = document.createElement('input')
-        lastNameInput.setAttribute('type', 'text')
-        lastNameInput.setAttribute('name', 'lastName')
-        lastNameInput.setAttribute('required', 'true')
-
-        const firstNameDiv = document.createElement('div')
-        const firstNameLabel = document.createElement('label')
-        firstNameLabel.textContent = 'Prénom'
-        const firstNameInput = document.createElement('input')
-        firstNameInput.setAttribute('type', 'text')
-        firstNameInput.setAttribute('name', 'firstName')
-        firstNameInput.setAttribute('required', 'true')
-
-        const emailDiv = document.createElement('div')
-        const emailLabel = document.createElement('label')
-        emailLabel.textContent = 'E-mail'
-        const emailInput = document.createElement('input')
-        emailInput.setAttribute('type', 'email')
-        emailInput.setAttribute('name', 'email')
-        emailInput.setAttribute('required', 'true')
-
-        const addressDiv = document.createElement('div')
-        const addressLabel = document.createElement('label')
-        addressLabel.textContent = 'Adresse'
-        const addressInput = document.createElement('input')
-        addressInput.setAttribute('type', 'text')
-        addressInput.setAttribute('name', 'address')
-        addressInput.setAttribute('required', 'true')
-
-        const cityDiv = document.createElement('div')
-        const cityLabel = document.createElement('label')
-        cityLabel.textContent = 'Ville'
-        const cityInput = document.createElement('input')
-        cityInput.setAttribute('type', 'text')
-        cityInput.setAttribute('name', 'city')
-        cityInput.setAttribute('required', 'true')
-
-        detailsForm.appendChild(detailsTitle)
-        detailsForm.appendChild(lastNameDiv)
-        lastNameDiv.appendChild(lastNameLabel)
-        lastNameDiv.appendChild(lastNameInput)
-        detailsForm.appendChild(firstNameDiv)
-        firstNameDiv.appendChild(firstNameLabel)
-        firstNameDiv.appendChild(firstNameInput)
-        detailsForm.appendChild(emailDiv)
-        emailDiv.appendChild(emailLabel)
-        emailDiv.appendChild(emailInput)
-        detailsForm.appendChild(addressDiv)
-        addressDiv.appendChild(addressLabel)
-        addressDiv.appendChild(addressInput)
-        detailsForm.appendChild(cityDiv)
-        cityDiv.appendChild(cityLabel)
-        cityDiv.appendChild(cityInput)
-
-        return detailsForm
     }
 
     /**
@@ -415,6 +308,48 @@ export default class HtmlFactory {
     }
 
     /**
+     * Créé un tableau HTML contenant les produits du panier
+     * @param {Array} cart Contenu du panier
+     * @param {String} apiUrl endpoint
+     * @returns {HTMLElement} Tableau HTML
+     */
+    static _showCartTable(cart, apiUrl) {
+        const table = document.createElement('table')
+        table.className = 'cart__table'
+        const tableHead = document.createElement('thead')
+        const tableHeadRow = document.createElement('tr')
+
+        const tableCols = [
+            'Article',
+            'Couleur',
+            'Quantité',
+            'Prix unitaire',
+            'Prix total',
+            'Supprimer'
+        ]
+
+        tableCols.map(value => {
+            const th = document.createElement('th')
+            th.textContent = value
+            tableHeadRow.appendChild(th)
+        })
+
+        const tableBody = document.createElement('tbody')
+
+        table.appendChild(tableHead)
+        tableHead.appendChild(tableHeadRow)
+        table.appendChild(tableBody)
+
+        cart.map((item, index) => {
+            this._createCartTableRow(item, index, apiUrl)
+                .then(element => { tableBody.appendChild(element) })
+                .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
+        })
+
+        return table
+    }
+
+    /**
      * Permet de créer une ligne de tableau HTML à partir des données fournies en paramètre.
      * @param {Object} item Objet contenant les informations d'un produit enregistré dans le panier
      * @param {Number} index Index de l'élément dans le tableau d'origine
@@ -423,12 +358,6 @@ export default class HtmlFactory {
      */
     static async _createCartTableRow(item, index, apiUrl) {
         const tableRow = document.createElement('tr')
-        const td1 = document.createElement('td')
-        const td2 = document.createElement('td')
-        const td3 = document.createElement('td')
-        const td4 = document.createElement('td')
-        const td5 = document.createElement('td')
-        const td6 = document.createElement('td')
 
         const deleteLink = document.createElement('a')
         deleteLink.setAttribute('href', '#')
@@ -439,28 +368,87 @@ export default class HtmlFactory {
         deleteImage.className = 'cart__delete-item'
         deleteImage.setAttribute('alt', 'Une poubelle')
 
-        await Request.getDatas(`${apiUrl}/${item.id}`)
+        await Request.getDatas(`${apiUrl}/${item._id}`)
             .then(values => {
-                tableRow.appendChild(td1)
-                td1.textContent = values.name
-                tableRow.appendChild(td2)
-                td2.textContent = item.option
-                tableRow.appendChild(td3)
-                td3.textContent = item.quantity
-                tableRow.appendChild(td4)
-                td4.textContent = this._formatPrice(values.price)
-                tableRow.appendChild(td5)
-                td5.textContent = this._formatPrice(parseInt(values.price) * item.quantity)
-                tableRow.appendChild(td6)
-                td6.appendChild(deleteLink)
-                deleteLink.setAttribute('data-index', index)
-                deleteLink.addEventListener('click', e => {
-                    this.showModal('Êtes-vous sûr de vouloir supprimer cet article ?', 'confirm', '', () => {Cart.deleteItemFromCart(e, apiUrl)})
-                })
-                deleteLink.appendChild(deleteImage)
+                for (let i = 0; i <= 5; i++) {
+                    const td = document.createElement('td')
+                    tableRow.appendChild(td)
+
+                    switch (i) {
+                        case 0:
+                            td.textContent = values.name
+                            break
+                        case 1:
+                            td.textContent = item.option
+                            break
+                        case 2:
+                            td.textContent = item.quantity
+                            break
+                        case 3:
+                            td.textContent = this._formatPrice(values.price)
+                            break
+                        case 4:
+                            td.textContent = this._formatPrice(parseInt(values.price) * item.quantity)
+                            break
+                        case 5:
+                            td.appendChild(deleteLink)
+                            deleteLink.setAttribute('data-index', index)
+                            deleteLink.addEventListener('click', e => {
+                                this.showModal(
+                                    'Êtes-vous sûr de vouloir supprimer cet article ?',
+                                    'confirm',
+                                    '',
+                                    () => { Cart.deleteItemFromCart(e, apiUrl) }
+                                )
+                            })
+                            deleteLink.appendChild(deleteImage)
+                            break
+                    }
+                }
             })
 
         return tableRow
+    }
+
+    /**
+     * Créé les champs de formulaire pour passer commande.
+     * @returns {HTMLElement}
+     */
+    static _showDetailsForm() {
+        const detailsForm = document.createElement('div')
+        detailsForm.className = 'cart__details'
+
+        const detailsTitle = document.createElement('h2')
+        detailsTitle.className = 'cart__details__title'
+        detailsTitle.textContent = 'Mes coordonnées'
+
+        const details = {
+            lastName: 'Nom',
+            firstName: 'Prénom',
+            email: 'E-mail',
+            address: 'Adresse',
+            city: 'Ville'
+        }
+
+        for (let key in details) {
+            const div = document.createElement('div')
+            const label = document.createElement('label')
+            label.setAttribute('for', `${key}Input`)
+            label.textContent = details[key]
+
+            const input = document.createElement('input')
+            input.setAttribute('type', key === 'email' ? 'email' : 'text')
+            input.setAttribute('name', key)
+            input.setAttribute('required', 'true')
+            input.id = `${key}Input`
+
+            div.appendChild(label)
+            div.appendChild(input)
+
+            detailsForm.appendChild(div)
+        }
+
+        return detailsForm
     }
 
     /**

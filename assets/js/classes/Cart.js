@@ -135,7 +135,7 @@ export default class Cart {
     static async totalPrice(cart, apiUrl) {
         let totalPrice = 0
         for (let item of cart) {
-            await Request.getDatas(`${apiUrl}/${item.id}`)
+            await Request.getDatas(`${apiUrl}/${item._id}`)
                 .then(values => {
                     totalPrice += item.quantity * values.price
                 })
