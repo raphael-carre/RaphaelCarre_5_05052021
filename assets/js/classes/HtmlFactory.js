@@ -173,7 +173,7 @@ export default class HtmlFactory {
             resetButton.className = 'btn'
             resetButton.textContent = 'Vider mon panier'
             resetButton.addEventListener('click', e => {
-                this.showModal('Êtes-vous sûr de vouloir vider votre panier ? ', 'confirm', '', Cart.resetCart.bind(Cart))
+                this.showModal('Êtes-vous sûr de vouloir vider votre panier ? ', 'confirm', null, Cart.resetCart.bind(Cart))
             })
             const buyButton = document.createElement('button')
             buyButton.setAttribute('type', 'submit')
@@ -230,7 +230,7 @@ export default class HtmlFactory {
      * @param {String} error Erreur à afficher lors d'une modale de type "error"
      * @param {Function} callbackFunction Fonction callback à utiliser lors d'une modale de type "confirm"
      */
-    static showModal(content, type = '', error = '', callbackFunction = '') {
+    static showModal(content, type = '', error = null, callbackFunction = null) {
         const body = document.body
 
         const overlay = document.createElement('div')
@@ -261,17 +261,14 @@ export default class HtmlFactory {
 
         overlay.appendChild(modal)
         modal.appendChild(message)
-
-        if (error !== '') {
-            const errorMessage = document.createElement('p')
-            errorMessage.className = 'modal__error'
-            errorMessage.textContent = error
-
-            modal.appendChild(errorMessage)
-        }
         
         switch(type) {
             case 'error':
+                const errorMessage = document.createElement('p')
+                errorMessage.className = 'modal__error'
+                errorMessage.textContent = error
+
+                modal.appendChild(errorMessage)
                 modal.appendChild(buttonDiv)
                 buttonDiv.appendChild(okButton)
                 okButton.addEventListener('click', this._hideModal)
@@ -300,8 +297,8 @@ export default class HtmlFactory {
      * Masque la fenêtre modale
      * @param {Event} e (optionnel)
      */
-    static _hideModal(e = '') {
-        e !== '' && e.preventDefault()
+    static _hideModal(e = null) {
+        e !== null && e.preventDefault()
         document.querySelector('.overlay').classList.add('fade-out')
         const timeOut = setTimeout(() => { document.body.removeChild(document.querySelector('.overlay')) }, 200)
         // clearTimeout(timeOut)

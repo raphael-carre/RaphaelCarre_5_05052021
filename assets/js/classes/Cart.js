@@ -13,13 +13,10 @@ export default class Cart {
     static addToCart(e) {
         e.preventDefault()
         
+        const cartExists = localStorage.getItem('cart')
         const datas = this._setNewCartItem(e)
 
-        if (!localStorage.getItem('cart')) {
-            localStorage.setItem('cart', JSON.stringify([datas]))
-        } else {
-            localStorage.setItem('cart', JSON.stringify(this._updateCartContent(datas)))
-        }
+        localStorage.setItem('cart', JSON.stringify(cartExists ? this._updateCartContent(datas) : [datas]))
 
         this.headerNotification()
         HtmlFactory.showModal('L\'article a bien été ajouté à votre panier')
@@ -139,6 +136,7 @@ export default class Cart {
                 .then(values => {
                     totalPrice += item.quantity * values.price
                 })
+                .catch(error => HtmlFactory.showModal('Il y a eu une erreur !', 'error', error))
         }
 
         return totalPrice
@@ -151,14 +149,12 @@ export default class Cart {
      * @returns {Object} Objet à ajouter au panier.
      */
     static _setNewCartItem(e) {
-        const form = e.target
         const datas = {}
 
-        for (let i = 0; i < form.length - 1; i++) {
-            if (form[i].getAttribute('name') === 'quantity') {
-                datas[form[i].getAttribute('name')] = parseInt(form[i].value)
-            } else {
-                datas[form[i].getAttribute('name')] = form[i].value
+        for (let input of e.target) {
+            if (input.getAttribute('type') !== 'submit') {
+                const inputName = input.getAttribute('name')
+                datas[inputName] = inputName === 'quantity' ? parseInt(input.value) : input.value
             }
         }
 
@@ -172,11 +168,11 @@ export default class Cart {
      */
     static _updateCartContent(newDatas) {
         let actualCart = JSON.parse(localStorage.getItem('cart'))
-        const filteredItem = actualCart.filter(product => product.id === newDatas.id && product.option === newDatas.option)
+        const filteredItem = actualCart.filter(product => product._id === newDatas._id && product.option === newDatas.option)
 
         if (filteredItem.length !== 0) {
             actualCart.map(item => {
-                if (item === filteredItem[0]) { item.quantity += newDatas.quantity }
+                item === filteredItem[0] && (item.quantity += newDatas.quantity)
             })
         } else {
             actualCart = [...actualCart, newDatas]
