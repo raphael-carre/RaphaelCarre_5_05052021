@@ -44,7 +44,7 @@ export default class Cart {
 
                 const buyForm = document.getElementById('buyForm')
                 document.getElementById('main').removeChild(buyForm)
-                HtmlFactory.displayEmptyCart()
+                HtmlFactory.showEmptyCart()
             } else {
                 // Mise à jour du LocalStorage
                 localStorage.setItem('cart', JSON.stringify(newCart))
@@ -99,7 +99,7 @@ export default class Cart {
         const main = document.getElementById('main')
         const buyForm = document.getElementById('buyForm')
         main.removeChild(buyForm)
-        HtmlFactory.displayEmptyCart()
+        HtmlFactory.showEmptyCart()
         localStorage.clear()
         this.headerNotification()
     }

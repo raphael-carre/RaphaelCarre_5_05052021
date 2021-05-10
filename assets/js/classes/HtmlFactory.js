@@ -10,19 +10,23 @@ export default class HtmlFactory {
      * et contant les informations du produit passé en paramètre.
      * @param {Object} product 
      */
-    static displayProductFromList(product) {
+    static showProductFromList(product) {
+        // Container
         const card = document.createElement('div')
         card.className = 'product-list-card'
 
+        // Lien vers la page du produit
         const link = document.createElement('a')
         link.className = 'product-list-card__link'
         link.setAttribute("href", `article.html?id=${product._id}`)
         link.setAttribute("title", `${product.name} - Voir la fiche produit`)
 
+        // Image du produit
         const imageCanvas = document.createElement('div')
         imageCanvas.className = 'product-list-card__image-canvas'
         imageCanvas.style.backgroundImage = `url(${product.imageUrl})`
 
+        // Prix du produit
         const price = document.createElement('span')
         price.className = 'product-list-card__price'
         price.textContent = this._formatPrice(product.price)
@@ -30,14 +34,17 @@ export default class HtmlFactory {
         const info = document.createElement('div')
         info.className = 'product-list-card__info'
 
+        // Nom du produit
         const name = document.createElement('h3')
         name.className = 'product-list-card__name'
         name.textContent = product.name
 
+        // Description du produit
         const description = document.createElement('p')
         description.className = 'product-list-card__description'
         description.textContent = product.description
 
+        // Imbrication des éléments
         card.appendChild(link)
         link.appendChild(imageCanvas)
         link.appendChild(info)
@@ -53,10 +60,12 @@ export default class HtmlFactory {
      * ainsi qu'un formulaire pour ajouter le produit au panier.
      * @param {Object} product 
      */
-    static displayOneProduct(product) {
+    static showOneProduct(product) {
+        // Container
         const card = document.createElement('div')
         card.className = 'product'
 
+        // Image du produit
         const image = document.createElement('img')
         image.className = 'product__image'
         image.setAttribute("src", product.imageUrl)
@@ -65,49 +74,57 @@ export default class HtmlFactory {
         const info = document.createElement('div')
         info.classList.add('product__info')
 
+        // Nom du produit
         const title = document.createElement('h3')
         title.className = 'product__title'
         title.textContent = product.name
         
+        // Description du produit
         const description = document.createElement('p')
         description.className = 'product_description'
         description.textContent = product.description
         
+        // Prix du produit
         const price = document.createElement('p')
         price.className = 'product__price'
         price.textContent = this._formatPrice(product.price)
 
+        // Formulaire
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
         form.id = 'addToCartForm'
         form.addEventListener('submit', Cart.addToCart.bind(Cart))
 
+        // ID
         const inputHidden = document.createElement('input')
         inputHidden.setAttribute('type', 'hidden')
         inputHidden.setAttribute('name', '_id')
         inputHidden.setAttribute("value", product._id)
         inputHidden.id = 'id'
 
+        // Couleurs
         const formField1 = document.createElement('div')
-        const formField2 = document.createElement('div')
-
+        
         const labelSelect = document.createElement('label')
         labelSelect.setAttribute('for', 'option-selector')
         labelSelect.textContent = 'Couleur'
-
+        
         const inputSelect = document.createElement('select')
         inputSelect.setAttribute('name', 'option')
         inputSelect.id = 'option-selector'
-
+        
         product.colors.map(color => {
             const optionSelect = document.createElement("option")
-
+            
             optionSelect.setAttribute("value", color)
             optionSelect.textContent = color
-
+            
             inputSelect.appendChild(optionSelect)
         })
 
+        // Quantité
+        const formField2 = document.createElement('div')
+        
         const labelQuantity = document.createElement('label')
         labelQuantity.setAttribute('for', 'quantity')
         labelQuantity.textContent = 'Quantité'
@@ -119,12 +136,14 @@ export default class HtmlFactory {
         inputQuantity.setAttribute('value', '1')
         inputQuantity.id = 'quantity'
 
+        // Bouton
         const buttonSubmit = document.createElement('button')
         buttonSubmit.className = 'btn'
         buttonSubmit.classList.add('btn--primary')
         buttonSubmit.setAttribute('type', 'submit')
         buttonSubmit.textContent = 'Ajouter au panier'
 
+        // Imbrication des éléments
         card.appendChild(image)
         card.appendChild(info)
         info.appendChild(title)
@@ -148,9 +167,11 @@ export default class HtmlFactory {
      * ainsi que le formulaire pour valider la commande.
      * @param {String} apiUrl endpoint
      */
-    static displayCart(apiUrl) {
+    static showCart(apiUrl) {
+        // Récupération du panier
         const currentCart = localStorage.getItem('cart')
 
+        // Formulaire
         const form = document.createElement('form')
         form.setAttribute('method', 'POST')
         form.id = 'buyForm'
@@ -159,13 +180,20 @@ export default class HtmlFactory {
         if (currentCart) {
             const cart = JSON.parse(currentCart)
 
+            // Titre
             const h2 = document.createElement("h2")
             h2.className = "cart__title"
             h2.textContent = 'Contenu de votre panier'
 
+            // Prix total
             const totalElement = document.createElement('p')
             totalElement.className = 'cart__total'
 
+            Cart.totalPrice(cart, apiUrl)
+                .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
+                .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
+
+            // Boutons
             const buttonDiv = document.createElement('div')
             buttonDiv.className = 'cart__button-div'
             const resetButton = document.createElement('button')
@@ -181,30 +209,26 @@ export default class HtmlFactory {
             buyButton.classList.add('btn--primary')
             buyButton.textContent = 'Valider ma commande'
 
+            // Imbrication des éléments
             form.appendChild(h2)
-            form.appendChild(this._showCartTable(cart, apiUrl))
+            form.appendChild(this._createCartTable(cart, apiUrl))
             form.appendChild(totalElement)
-            form.appendChild(this._showDetailsForm())
-            
+            form.appendChild(this._createDetailsForm())
             form.appendChild(buttonDiv)
             buttonDiv.appendChild(resetButton)
             buttonDiv.appendChild(buyButton)
 
-            Cart.totalPrice(cart, apiUrl)
-                .then(value => totalElement.textContent = `Total : ${this._formatPrice(value)}`)
-                .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
-
             this._addToContainer(form, 'main', 'cart')
             return
         } else {
-            this.displayEmptyCart()
+            this.showEmptyCart()
         }
     }
 
     /**
      * Affichage par défault lorsque le panier est vide.
      */
-    static displayEmptyCart() {
+    static showEmptyCart() {
         const main = document.getElementById('main')
         const content = document.createElement('div')
 
@@ -310,7 +334,7 @@ export default class HtmlFactory {
      * @param {String} apiUrl endpoint
      * @returns {HTMLElement} Tableau HTML
      */
-    static _showCartTable(cart, apiUrl) {
+    static _createCartTable(cart, apiUrl) {
         const table = document.createElement('table')
         table.className = 'cart__table'
         const tableHead = document.createElement('thead')
@@ -411,7 +435,7 @@ export default class HtmlFactory {
      * Créé les champs de formulaire pour passer commande.
      * @returns {HTMLElement}
      */
-    static _showDetailsForm() {
+    static _createDetailsForm() {
         const detailsForm = document.createElement('div')
         detailsForm.className = 'cart__details'
 

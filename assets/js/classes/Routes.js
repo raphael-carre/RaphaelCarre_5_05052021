@@ -11,7 +11,7 @@ export default class Routes {
      */
     static async index(apiUrl) {
         await Request.getDatas(apiUrl)
-            .then(values => values.map(item => { HtmlFactory.displayProductFromList(item) }))
+            .then(values => values.map(item => { HtmlFactory.showProductFromList(item) }))
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
 
@@ -21,7 +21,7 @@ export default class Routes {
      */
     static async article(apiUrl) {
         await Request.getDatas(apiUrl)
-            .then(values => { HtmlFactory.displayOneProduct(values) })
+            .then(values => { HtmlFactory.showOneProduct(values) })
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
 
@@ -31,6 +31,6 @@ export default class Routes {
      * @returns 
      */
     static panier(apiUrl) {
-        HtmlFactory.displayCart(apiUrl)
+        HtmlFactory.showCart(apiUrl)
     }
 }
