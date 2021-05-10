@@ -1,5 +1,6 @@
 import Cart from './Cart'
 import Request from './Request'
+import Validator from './Validator'
 
 /**
  * Classe utilitaire permettant de créer les éléments HTML nécessaires à l'application.
@@ -208,6 +209,10 @@ export default class HtmlFactory {
             buyButton.className = 'btn'
             buyButton.classList.add('btn--primary')
             buyButton.textContent = 'Valider ma commande'
+            buyButton.addEventListener('click', e => {
+                e.preventDefault()
+                console.log(e)
+            })
 
             // Imbrication des éléments
             form.appendChild(h2)
@@ -462,6 +467,8 @@ export default class HtmlFactory {
             input.setAttribute('name', key)
             input.setAttribute('required', 'true')
             input.id = `${key}Input`
+            input.addEventListener('change', e => this._showHideErrorElement(e, key))
+
 
             div.appendChild(label)
             div.appendChild(input)
@@ -482,6 +489,40 @@ export default class HtmlFactory {
         const target = document.getElementById(targetId)
         cssClass !== '' && target.classList.add(cssClass)
         target.appendChild(element)
+    }
+
+    /**
+     * Affiche un message d'erreur si le champ complété n'est pas valide.
+     * Retire ce message si le champ est valide.
+     * @param {Event} e 
+     * @param {String} key 
+     */
+    static _showHideErrorElement(e, key) {
+        const validator = new Validator()
+
+        const input = e.target
+        const response = validator.validate(key, input.value)
+        
+        if (!response.validate) {
+            if (!document.querySelector('.error-span')) {
+                const errorSpan = document.createElement('span')
+                errorSpan.className = 'error-span'
+                errorSpan.textContent = response.message
+                input.parentNode.appendChild(errorSpan)
+                input.previousElementSibling.className = 'label--error'
+                input.className = 'input--error'
+            }
+
+            return
+        }
+
+        if (document.querySelector('.error-span')) {
+            input.parentNode.removeChild(document.querySelector('.error-span'))
+            input.previousElementSibling.classList.remove('label--error')
+            input.classList.remove('input--error')
+
+            return
+        }
     }
 
     /**

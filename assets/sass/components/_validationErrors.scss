@@ -1,0 +1,21 @@
+.error-span {
+    display: block;
+    flex: 1 0 100%;
+    margin-top: .5em;
+    margin-left: calc(20% + 1em);
+    font-size: .8em;
+    color: $color-error;
+}
+
+.label--error, .input--error {
+    border-top-color: $color-error;
+    border-bottom-color: $color-error;
+}
+
+.label--error {
+    border-left-color: $color-error;
+}
+
+.input--error {
+    border-right-color: $color-error;
+}
