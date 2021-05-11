@@ -128,24 +128,22 @@ export default class Cart {
             }
         }
 
+        const cart = JSON.parse(localStorage.getItem('cart'))
+
+        await this.totalPrice(cart, apiUrl)
+            .then(totalPrice => localStorage.setItem('totalPrice', totalPrice.toString()))
+            .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
+
         let productIds = []
-        JSON.parse(localStorage.getItem('cart')).map(item => { productIds = [...productIds, item._id] })
+        cart.map(item => { productIds = [...productIds, item._id] })
 
         await Request.postDatas(`${apiUrl}/order`, JSON.stringify({ contact, products: productIds }))
             .then(response => { 
-                const cart = JSON.parse(localStorage.getItem('cart'))
-
                 localStorage.removeItem('cart')
-                
-                this.headerNotification()
-                
-                this.totalPrice(cart, apiUrl)
-                    .then(totalPrice => localStorage.setItem('totalPrice', totalPrice.toString()))
-                    .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
-                
-                    localStorage.setItem('order', JSON.stringify(response))
-                
-                    window.location = 'confirmation.html'
+                localStorage.setItem('order', JSON.stringify(response))
+
+                this.headerNotification()                
+                window.location = 'confirmation.html'
             })
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
