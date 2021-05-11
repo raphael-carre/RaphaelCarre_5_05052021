@@ -2,7 +2,13 @@
     display: block;
     flex: 1 0 100%;
     margin-top: .5em;
-    margin-left: calc(20% + 1em);
+    text-align: center;
+
+    @include wide-screen {
+        margin-left: calc(20% + 1em);
+        text-align: left;
+    }
+
     font-size: .8em;
     color: $color-error;
 }

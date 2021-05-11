@@ -20,7 +20,12 @@ label {
 }
 
 input, select {
-    width: 80%;
+    width: calc(100% - 6em);
+
+    @include mid-screen {
+        width: 80%;
+    }
+    
     border-left: none;
     border-top-left-radius: 0;
     border-top-right-radius: $border-radius;
