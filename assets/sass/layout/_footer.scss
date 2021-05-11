@@ -1,7 +1,10 @@
 footer {
+    margin-top: 1em;
     justify-self: flex-end;
     // margin-top: auto;
     background-color: $color-primary;
+
+    color: #fff;
 
     ul {
         margin: 0 auto;
@@ -15,6 +18,12 @@ footer {
     a {
         display: block;
         padding: 0.75em 1em;
+
+        color: inherit;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     p {

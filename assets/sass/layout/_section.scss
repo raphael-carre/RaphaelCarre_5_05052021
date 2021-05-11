@@ -11,17 +11,35 @@ section:first-of-type {
     }
 }
 
+
 .home-title {
-    align-self: flex-start;
-    flex-basis: 100%;
-    margin-top: 0;
-    margin-bottom: 1em;
-    @include wide-screen {
-        margin-bottom: 2em;
+    &__background {
+        position: relative;
+        align-self: flex-start;
+        flex-basis: 100%;
+        margin-top: 0;
+        margin-bottom: 1em;
+        height: 55vw;
+        background: linear-gradient(to top, rgba(0,0,0,.6) 25%, rgba(0,0,0,.05) 60%), url(~@img/bear_background.jpg);
+        background-size: cover;
     }
-    padding: 2em 0;
-    background-color: $color-secondary;
-    color: #fff;
+
+    &__title {
+        position: absolute;
+        bottom: 26%;
+        width: 100%;
+        max-width: 1024px;
+        left: 0;
+        right: 0;
+        text-align: center;
+
+        @include mid-screen {
+            padding-left: 10%;
+            text-align: left;
+        }
+        
+        color: #fff;
+    }
 }
 
 #main {
@@ -72,7 +90,7 @@ section:first-of-type {
         border-collapse: collapse;
 
         thead, tbody {
-            border-bottom: 2px solid $color-secondary;
+            border-bottom: 2px solid $color-primary--light;
         }
 
         td, th {
@@ -187,8 +205,9 @@ section:first-of-type {
     text-align: center;
 
     div {
+        margin-bottom: 20%;
         padding: 2em;
-        border: 1px solid $color-secondary;
+        border: 1px solid $color-primary--light;
         border-radius: 1em;
         
         > * + * {
@@ -197,7 +216,7 @@ section:first-of-type {
     }
 
     &__title {
-        margin-top: 20%;
+        margin-top: 10%;
         margin-bottom: 2em;
     }
 }

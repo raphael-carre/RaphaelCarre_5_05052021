@@ -9,6 +9,7 @@ body {
     @extend %flex-col;
     justify-content: space-between;
     // justify-content: stretch;
+    background: $color-secondary;
     font-family: sans-serif;
     font-size: 16px;
 
