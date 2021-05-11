@@ -248,6 +248,9 @@ export default class HtmlFactory {
         this._addToContainer(content, 'main', 'empty-cart')
     }
 
+    /**
+     * Affiche la confirmation de la commande
+     */
     static showOrderConfirmation() {
         const datas = JSON.parse(localStorage.getItem('order'))
         console.log(localStorage.getItem('totalPrice'))

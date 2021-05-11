@@ -28,12 +28,14 @@ export default class Routes {
     /**
      * Route pour la page panier.html.
      * @param {String} apiUrl endpoint
-     * @returns 
      */
     static panier(apiUrl) {
         HtmlFactory.showCart(apiUrl)
     }
 
+    /**
+     * Route pour la page confirmation.html.
+     */
     static confirmation() {
         !localStorage.getItem('order') && (window.location = 'index.html')
         HtmlFactory.showOrderConfirmation()
