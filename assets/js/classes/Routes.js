@@ -16,10 +16,10 @@ export default class Routes {
     }
 
     /**
-     * Route pour la page article.html.
+     * Route pour la page produit.html.
      * @param {String} apiUrl endpoint
      */
-    static async article(apiUrl) {
+    static async produit(apiUrl) {
         await Request.getDatas(apiUrl)
             .then(values => { HtmlFactory.showOneProduct(values) })
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })

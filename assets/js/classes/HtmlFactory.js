@@ -19,7 +19,7 @@ export default class HtmlFactory {
         // Lien vers la page du produit
         const link = document.createElement('a')
         link.className = 'product-list-card__link'
-        link.href = `article.html?id=${product._id}`
+        link.href = `produit.html?id=${product._id}`
         link.title = `${product.name} - Voir la fiche produit`
 
         // Image du produit

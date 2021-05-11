@@ -22,7 +22,7 @@ export default class Router {
      * @returns {String} Renvoie l'url de l'API ou fait une redirection vers index.html.
      */
     _apiRequestUrl(url) {
-        if (this._pageNameParser() === 'article') {
+        if (this._pageNameParser() === 'produit') {
             const params = new URLSearchParams(window.location.search)
 
             if (params.has('id') && params.get('id') !== '') return `${url}/${params.get('id')}`
