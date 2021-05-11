@@ -433,6 +433,8 @@ export default class HtmlFactory {
      * @returns {HTMLElement}
      */
     static _createDetailsForm() {
+        const validator = new Validator()
+        
         const detailsForm = document.createElement('div')
         detailsForm.className = 'cart__details'
 
@@ -460,7 +462,6 @@ export default class HtmlFactory {
             input.name = key
             input.id = `${key}Input`
             input.addEventListener('change', e => {
-                const validator = new Validator()
                 const response = validator.validate(e.target.name, e.target.value)
                 this._showHideErrorElement(e.target, response) 
             })
@@ -494,7 +495,7 @@ export default class HtmlFactory {
      */
     static _showHideErrorElement(input, response) {
         if (!response.validate) {
-            if (!document.querySelector('.error-span')) {
+            if (!input.parentNode.querySelector('.error-span')) {
                 const errorSpan = document.createElement('span')
                 errorSpan.className = 'error-span'
                 errorSpan.textContent = response.message
@@ -507,7 +508,7 @@ export default class HtmlFactory {
             return
         }
 
-        if (document.querySelector('.error-span')) {
+        if (input.parentNode.querySelector('.error-span')) {
             input.parentNode.removeChild(document.querySelector('.error-span'))
             input.previousElementSibling.classList.remove('label--error')
             input.classList.remove('input--error')
