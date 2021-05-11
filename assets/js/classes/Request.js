@@ -14,9 +14,9 @@ export default class Request {
     }
 
     /**
-     * 
+     * Envoie une requête en POST vers un serveur distant.
      * @param {String} url 
-     * @param {JSON} datas 
+     * @param {JSON} datas Données au format JSON à envoyer au serveur
      * @returns {Promise}
      */
     static postDatas(url, datas) {
