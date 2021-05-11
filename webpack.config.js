@@ -48,7 +48,8 @@ let config = {
         alias: {
             "@img": path.resolve("./assets/images/"),
             "@js": path.resolve("./assets/js/"),
-            "@css": path.resolve("./assets/sass/")
+            "@css": path.resolve("./assets/sass/"),
+            "@fonts": path.resolve("./assets/fonts/")
         }
     },
     devtool: dev ? "eval-cheap-module-source-map" : false,
@@ -81,7 +82,11 @@ let config = {
             },
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                loader: 'file-loader'
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: "fonts/"
+                }
             },
             {
                 test: /\.(png|jpe?g|gif|svg)$/,

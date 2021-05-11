@@ -13,6 +13,9 @@
             ],
             "@js/*": [
                 "./assets/js/*"
+            ],
+            "@fonts/*": [
+                "./assets/fonts/*"
             ]
         }
     },
