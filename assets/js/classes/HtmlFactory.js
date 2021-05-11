@@ -202,6 +202,7 @@ export default class HtmlFactory {
             resetButton.className = 'btn'
             resetButton.textContent = 'Vider mon panier'
             resetButton.addEventListener('click', e => {
+                e.preventDefault()
                 this.showModal('Êtes-vous sûr de vouloir vider votre panier ? ', 'confirm', null, Cart.resetCart.bind(Cart))
             })
             const buyButton = document.createElement('button')

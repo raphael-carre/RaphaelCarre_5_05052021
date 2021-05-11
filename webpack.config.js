@@ -41,7 +41,7 @@ let config = {
     output: {
         path: path.resolve(__dirname, "public"),
         filename: "js/[name].js",
-        publicPath: dev ? "/public/" : ""
+        publicPath: dev ? "/public/" : "/RaphaelCarre_5_05052021/public/"
         
     },
     resolve: {

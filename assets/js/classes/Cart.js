@@ -96,7 +96,8 @@ export default class Cart {
      * après confirmation.
      * @param {Event} e 
      */
-    static resetCart() {
+    static resetCart(e) {
+        e.preventDefault()
         const main = document.getElementById('main')
         const buyForm = document.getElementById('buyForm')
         main.removeChild(buyForm)
