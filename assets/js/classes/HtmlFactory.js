@@ -339,7 +339,7 @@ export default class HtmlFactory {
                 })
                 break
             default:
-                setTimeout(this._hideModal, 1700)
+                setTimeout(this._hideModal, 1500)
         }
 
         body.appendChild(overlay)
