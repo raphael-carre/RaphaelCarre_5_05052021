@@ -176,7 +176,7 @@ export default class HtmlFactory {
         const form = document.createElement('form')
         form.method = 'POST'
         form.id = 'buyForm'
-        form.addEventListener('submit', Cart.buyCartContent)
+        form.addEventListener('submit', e => { Cart.buyCartContent(e, apiUrl) })
 
         if (currentCart) {
             const cart = JSON.parse(currentCart)
@@ -246,6 +246,32 @@ export default class HtmlFactory {
 
         main.classList.contains('cart') && main.classList.remove('cart')
         this._addToContainer(content, 'main', 'empty-cart')
+    }
+
+    static showOrderConfirmation() {
+        const datas = JSON.parse(localStorage.getItem('order'))
+        console.log(localStorage.getItem('totalPrice'))
+        const totalPrice = parseInt(JSON.parse(localStorage.getItem('totalPrice')))
+
+        const container = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.className = 'order-confirmation__title'
+        h2.textContent = 'Confirmation de votre commande'
+
+        const p1 = document.createElement('p')
+        p1.textContent = `${datas.contact.firstName} ${datas.contact.lastName}, nous vous remercions pour votre achat !`
+        const p2 = document.createElement('p')
+        p2.textContent = `Montant total de la facture : ${this._formatPrice(totalPrice)}`
+        const p3 = document.createElement('p')
+        p3.textContent = `N° de commande : "${datas.orderId}"`
+
+        container.appendChild(p1)
+        container.appendChild(p2)
+        container.appendChild(p3)
+
+        this._addToContainer(h2, 'main', '')
+        this._addToContainer(container, 'main', 'order-confirmation')
     }
 
     /**

@@ -105,7 +105,13 @@ export default class Cart {
         this.headerNotification()
     }
 
-    static buyCartContent(e) {
+    /**
+     * Vérifie le contenu du formulaire, envoie une requête avec l'ensemble des données en POST si il est valide,
+     * et redirige vers la page "confirmation.html".
+     * @param {Event} e 
+     * @param {String} apiUrl endpoint
+     */
+    static async buyCartContent(e, apiUrl) {
         e.preventDefault()
 
         const validator = new Validator()
@@ -122,12 +128,26 @@ export default class Cart {
             }
         }
 
-        const payload = {
-            contact,
-            products: localStorage.getItem('cart')
-        }
+        let productIds = []
+        JSON.parse(localStorage.getItem('cart')).map(item => { productIds = [...productIds, item._id] })
 
-        console.log(payload)
+        await Request.postDatas(`${apiUrl}/order`, JSON.stringify({ contact, products: productIds }))
+            .then(response => { 
+                const cart = JSON.parse(localStorage.getItem('cart'))
+
+                localStorage.removeItem('cart')
+                
+                this.headerNotification()
+                
+                this.totalPrice(cart, apiUrl)
+                    .then(totalPrice => localStorage.setItem('totalPrice', totalPrice.toString()))
+                    .catch(error => { this.showModal('Il y a eu une erreur !', 'error', error) })
+                
+                    localStorage.setItem('order', JSON.stringify(response))
+                
+                    window.location = 'confirmation.html'
+            })
+            .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
 
     /**

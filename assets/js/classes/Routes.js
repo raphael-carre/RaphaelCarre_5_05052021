@@ -33,4 +33,10 @@ export default class Routes {
     static panier(apiUrl) {
         HtmlFactory.showCart(apiUrl)
     }
+
+    static confirmation() {
+        !localStorage.getItem('order') && (window.location = 'index.html')
+        HtmlFactory.showOrderConfirmation()
+        localStorage.clear()
+    }
 }

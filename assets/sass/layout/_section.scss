@@ -178,3 +178,26 @@ section:first-of-type {
         text-align: center;
     }
 }
+
+.order-confirmation {
+    @extend %flex-col;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    div {
+        padding: 2em;
+        border: 1px solid $color-secondary;
+        border-radius: 1em;
+        
+        > * + * {
+            margin-top: 1em;
+        }
+    }
+
+    &__title {
+        margin-top: 20%;
+        margin-bottom: 2em;
+    }
+}
