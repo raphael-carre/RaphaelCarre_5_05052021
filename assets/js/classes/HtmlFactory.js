@@ -99,8 +99,8 @@ export default class HtmlFactory {
         // ID
         const inputHidden = document.createElement('input')
         inputHidden.setAttribute('type', 'hidden')
-        inputHidden.setAttribute('name', '_id')
         inputHidden.setAttribute("value", product._id)
+        inputHidden.name = '_id'
         inputHidden.id = 'id'
 
         // Couleurs
@@ -111,7 +111,7 @@ export default class HtmlFactory {
         labelSelect.textContent = 'Couleur'
         
         const inputSelect = document.createElement('select')
-        inputSelect.setAttribute('name', 'option')
+        inputSelect.name = 'option'
         inputSelect.id = 'option-selector'
         
         product.colors.map(color => {
@@ -132,9 +132,9 @@ export default class HtmlFactory {
 
         const inputQuantity = document.createElement('input')
         inputQuantity.setAttribute('type', 'number')
-        inputQuantity.setAttribute('name', 'quantity')
         inputQuantity.setAttribute('min', '1')
         inputQuantity.setAttribute('value', '1')
+        inputQuantity.name = 'quantity'
         inputQuantity.id = 'quantity'
 
         // Bouton
@@ -209,10 +209,6 @@ export default class HtmlFactory {
             buyButton.className = 'btn'
             buyButton.classList.add('btn--primary')
             buyButton.textContent = 'Valider ma commande'
-            buyButton.addEventListener('click', e => {
-                e.preventDefault()
-                console.log(e)
-            })
 
             // Imbrication des éléments
             form.appendChild(h2)
@@ -464,11 +460,14 @@ export default class HtmlFactory {
 
             const input = document.createElement('input')
             input.setAttribute('type', key === 'email' ? 'email' : 'text')
-            input.setAttribute('name', key)
             input.setAttribute('required', 'true')
+            input.name = key
             input.id = `${key}Input`
-            input.addEventListener('change', e => this._showHideErrorElement(e, key))
-
+            input.addEventListener('change', e => {
+                const validator = new Validator()
+                const response = validator.validate(e.target.name, e.target.value)
+                this.showHideErrorElement(e.target, response) 
+            })
 
             div.appendChild(label)
             div.appendChild(input)
@@ -494,20 +493,16 @@ export default class HtmlFactory {
     /**
      * Affiche un message d'erreur si le champ complété n'est pas valide.
      * Retire ce message si le champ est valide.
-     * @param {Event} e 
-     * @param {String} key 
+     * @param {HTMLElement} input Champ de formulaire
+     * @param {Object} response Réponse de la classe Validator
      */
-    static _showHideErrorElement(e, key) {
-        const validator = new Validator()
-
-        const input = e.target
-        const response = validator.validate(key, input.value)
-        
+    static showHideErrorElement(input, response) {
         if (!response.validate) {
             if (!document.querySelector('.error-span')) {
                 const errorSpan = document.createElement('span')
                 errorSpan.className = 'error-span'
                 errorSpan.textContent = response.message
+
                 input.parentNode.appendChild(errorSpan)
                 input.previousElementSibling.className = 'label--error'
                 input.className = 'input--error'

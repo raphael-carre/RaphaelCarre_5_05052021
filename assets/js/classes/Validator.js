@@ -38,6 +38,9 @@ export default class Validator {
      * @returns {Object}
      */
     validate(type, stringToTest) {
+        if (stringToTest === '') {
+            return { validate: false, message: "Merci de renseigner ce champ de formulaire" }
+        }
         const response = { validate: this[type].regex.test(stringToTest) }
         !response.validate && (response.message = this[type].errorMessage)
 

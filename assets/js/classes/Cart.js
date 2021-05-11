@@ -1,5 +1,6 @@
 import HtmlFactory from './HtmlFactory'
 import Request from './Request'
+import Validator from './Validator'
 
 /**
  * Gestion du panier client.
@@ -107,12 +108,27 @@ export default class Cart {
     static buyCartContent(e) {
         e.preventDefault()
 
+        const validator = new Validator()
+        let errors = 0
+
         let contact = {}
 
         for (let index of e.target) {
             if (index.getAttribute('type') !== 'reset' && index.getAttribute('type') !== 'submit') {
-                contact[index.getAttribute('name')] = index.value
+                const response = validator.validate(index.name, index.value)
+                
+                if (!response.validate) {
+                    HtmlFactory.showHideErrorElement(index, response)
+                    errors++
+                }
+                contact[index.name] = index.value
             }
+        }
+
+        
+        if (errors > 0) {
+            console.log(errors)
+            return
         }
 
         const payload = {
@@ -153,8 +169,7 @@ export default class Cart {
 
         for (let input of e.target) {
             if (input.getAttribute('type') !== 'submit') {
-                const inputName = input.getAttribute('name')
-                datas[inputName] = inputName === 'quantity' ? parseInt(input.value) : input.value
+                datas[input.name] = input.name === 'quantity' ? parseInt(input.value) : input.value
             }
         }
 
