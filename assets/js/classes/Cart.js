@@ -109,26 +109,17 @@ export default class Cart {
         e.preventDefault()
 
         const validator = new Validator()
-        let errors = 0
 
         let contact = {}
 
         for (let index of e.target) {
-            if (index.getAttribute('type') !== 'reset' && index.getAttribute('type') !== 'submit') {
+            if (index.type !== 'reset' && index.type !== 'submit') {
                 const response = validator.validate(index.name, index.value)
                 
-                if (!response.validate) {
-                    HtmlFactory.showHideErrorElement(index, response)
-                    errors++
-                }
+                if (!response.validate) return
+
                 contact[index.name] = index.value
             }
-        }
-
-        
-        if (errors > 0) {
-            console.log(errors)
-            return
         }
 
         const payload = {

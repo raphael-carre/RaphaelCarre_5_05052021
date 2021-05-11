@@ -19,8 +19,8 @@ export default class HtmlFactory {
         // Lien vers la page du produit
         const link = document.createElement('a')
         link.className = 'product-list-card__link'
-        link.setAttribute("href", `article.html?id=${product._id}`)
-        link.setAttribute("title", `${product.name} - Voir la fiche produit`)
+        link.href = `article.html?id=${product._id}`
+        link.title = `${product.name} - Voir la fiche produit`
 
         // Image du produit
         const imageCanvas = document.createElement('div')
@@ -69,8 +69,8 @@ export default class HtmlFactory {
         // Image du produit
         const image = document.createElement('img')
         image.className = 'product__image'
-        image.setAttribute("src", product.imageUrl)
-        image.setAttribute("alt", product.name)
+        image.src = product.imageUrl
+        image.alt = product.name
 
         const info = document.createElement('div')
         info.classList.add('product__info')
@@ -92,14 +92,14 @@ export default class HtmlFactory {
 
         // Formulaire
         const form = document.createElement('form')
-        form.setAttribute('method', 'POST')
+        form.method = 'POST'
         form.id = 'addToCartForm'
         form.addEventListener('submit', Cart.addToCart.bind(Cart))
 
         // ID
         const inputHidden = document.createElement('input')
-        inputHidden.setAttribute('type', 'hidden')
-        inputHidden.setAttribute("value", product._id)
+        inputHidden.type = 'hidden'
+        inputHidden.value = product._id
         inputHidden.name = '_id'
         inputHidden.id = 'id'
 
@@ -107,7 +107,7 @@ export default class HtmlFactory {
         const formField1 = document.createElement('div')
         
         const labelSelect = document.createElement('label')
-        labelSelect.setAttribute('for', 'option-selector')
+        labelSelect.htmlFor = 'option-selector'
         labelSelect.textContent = 'Couleur'
         
         const inputSelect = document.createElement('select')
@@ -117,7 +117,7 @@ export default class HtmlFactory {
         product.colors.map(color => {
             const optionSelect = document.createElement("option")
             
-            optionSelect.setAttribute("value", color)
+            optionSelect.value = color
             optionSelect.textContent = color
             
             inputSelect.appendChild(optionSelect)
@@ -127,13 +127,13 @@ export default class HtmlFactory {
         const formField2 = document.createElement('div')
         
         const labelQuantity = document.createElement('label')
-        labelQuantity.setAttribute('for', 'quantity')
+        labelQuantity.htmlFor = 'quantity'
         labelQuantity.textContent = 'Quantité'
 
         const inputQuantity = document.createElement('input')
-        inputQuantity.setAttribute('type', 'number')
-        inputQuantity.setAttribute('min', '1')
-        inputQuantity.setAttribute('value', '1')
+        inputQuantity.type = 'number'
+        inputQuantity.min = 1
+        inputQuantity.value = 1
         inputQuantity.name = 'quantity'
         inputQuantity.id = 'quantity'
 
@@ -141,7 +141,7 @@ export default class HtmlFactory {
         const buttonSubmit = document.createElement('button')
         buttonSubmit.className = 'btn'
         buttonSubmit.classList.add('btn--primary')
-        buttonSubmit.setAttribute('type', 'submit')
+        buttonSubmit.type = 'submit'
         buttonSubmit.textContent = 'Ajouter au panier'
 
         // Imbrication des éléments
@@ -174,7 +174,7 @@ export default class HtmlFactory {
 
         // Formulaire
         const form = document.createElement('form')
-        form.setAttribute('method', 'POST')
+        form.method = 'POST'
         form.id = 'buyForm'
         form.addEventListener('submit', Cart.buyCartContent)
 
@@ -198,14 +198,14 @@ export default class HtmlFactory {
             const buttonDiv = document.createElement('div')
             buttonDiv.className = 'cart__button-div'
             const resetButton = document.createElement('button')
-            resetButton.setAttribute('type', 'reset')
+            resetButton.type = 'reset'
             resetButton.className = 'btn'
             resetButton.textContent = 'Vider mon panier'
             resetButton.addEventListener('click', e => {
                 this.showModal('Êtes-vous sûr de vouloir vider votre panier ? ', 'confirm', null, Cart.resetCart.bind(Cart))
             })
             const buyButton = document.createElement('button')
-            buyButton.setAttribute('type', 'submit')
+            buyButton.type = 'submit'
             buyButton.className = 'btn'
             buyButton.classList.add('btn--primary')
             buyButton.textContent = 'Valider ma commande'
@@ -303,12 +303,10 @@ export default class HtmlFactory {
                 buttonDiv.appendChild(noButton)
                 buttonDiv.appendChild(yesButton)
 
-                noButton.addEventListener('click', e => {
-                    this._hideModal(e)                    
-                })
-                yesButton.addEventListener('click', (e) => {
+                noButton.addEventListener('click', this._hideModal)
+                yesButton.addEventListener('click', () => {
                     callbackFunction()
-                    this._hideModal(e)
+                    this._hideModal()
                 })
                 break
             default:
@@ -320,10 +318,8 @@ export default class HtmlFactory {
 
     /**
      * Masque la fenêtre modale
-     * @param {Event} e (optionnel)
      */
-    static _hideModal(e = null) {
-        e !== null && e.preventDefault()
+    static _hideModal() {
         document.querySelector('.overlay').classList.add('fade-out')
         const timeOut = setTimeout(() => { document.body.removeChild(document.querySelector('.overlay')) }, 200)
         // clearTimeout(timeOut)
@@ -382,13 +378,13 @@ export default class HtmlFactory {
         const tableRow = document.createElement('tr')
 
         const deleteLink = document.createElement('a')
-        deleteLink.setAttribute('href', '#')
-        deleteLink.setAttribute('title', 'Supprimer l\'article')
+        deleteLink.href = '#'
+        deleteLink.title = 'Supprimer l\'article'
 
         const deleteImage = document.createElement('img')
         deleteImage.src = require('@img/trashCan.svg').default
         deleteImage.className = 'cart__delete-item'
-        deleteImage.setAttribute('alt', 'Une poubelle')
+        deleteImage.alt = 'Une poubelle'
 
         await Request.getDatas(`${apiUrl}/${item._id}`)
             .then(values => {
@@ -455,18 +451,18 @@ export default class HtmlFactory {
         for (let key in details) {
             const div = document.createElement('div')
             const label = document.createElement('label')
-            label.setAttribute('for', `${key}Input`)
+            label.htmlFor = `${key}Input`
             label.textContent = details[key]
 
             const input = document.createElement('input')
-            input.setAttribute('type', key === 'email' ? 'email' : 'text')
-            input.setAttribute('required', 'true')
+            input.type = key === 'email' ? 'email' : 'text'
+            input.required = true
             input.name = key
             input.id = `${key}Input`
             input.addEventListener('change', e => {
                 const validator = new Validator()
                 const response = validator.validate(e.target.name, e.target.value)
-                this.showHideErrorElement(e.target, response) 
+                this._showHideErrorElement(e.target, response) 
             })
 
             div.appendChild(label)
@@ -496,7 +492,7 @@ export default class HtmlFactory {
      * @param {HTMLElement} input Champ de formulaire
      * @param {Object} response Réponse de la classe Validator
      */
-    static showHideErrorElement(input, response) {
+    static _showHideErrorElement(input, response) {
         if (!response.validate) {
             if (!document.querySelector('.error-span')) {
                 const errorSpan = document.createElement('span')
