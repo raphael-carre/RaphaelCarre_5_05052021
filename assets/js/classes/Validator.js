@@ -3,33 +3,35 @@
  */
 export default class Validator {
     constructor() {
-        this.quantity = {
-            regex: /^[1-9][0-9]*/,
-            errorMessage: "Vous ne devez saisir que des nombres; valeur minimale : 1"
-        }
-        this.number = {
-            regex: /[0-9]+/,
-            errorMessage: "Vous ne devez saisir que des nombres"
-        }
-        this.lastName = {
-            regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\'|\-]?[a-zA-Zçéèàëêùûüô])+$/,
-            errorMessage: "Seuls les caractères alphabétiques, les ' et les - sont autorisés"
-        }
-        this.firstName = {
-            regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\-]?[a-zA-Zçéèàëêùûüô])+$/,
-            errorMessage: "Seuls les caractères alphabétiques et les - sont autorisés"
-        }
-        this.address = {
-            regex: /^([0-9]+)?([\,|\s|\-]?[a-zA-Z0-9çéèàëêùûüô])+$/,
-            errorMessage: "L'adresse saise n'est pas valide"
-        }
-        this.city = {
-            regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\'|\-]?[a-zA-Zçéèàëêùûüô])+$/,
-            errorMessage: "Seuls les caractères alphabétiques, les ' et - sont autorisés"
-        }
-        this.email = {
-            regex: /^[\w\-\.]+\@[\w\-\.]+\.[\w]+$/,
-            errorMessage: "L'adresse e-mail n'est pas valide"
+        this.matches = {
+            quantity: {
+                regex: /^[1-9][0-9]*/,
+                errorMessage: "Vous ne devez saisir que des nombres; valeur minimale : 1"
+            },
+            number: {
+                regex: /[0-9]+/,
+                errorMessage: "Vous ne devez saisir que des nombres"
+            },
+            lastName: {
+                regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\'|\-]?[a-zA-Zçéèàëêùûüô])+$/,
+                errorMessage: "Seuls les caractères alphabétiques, les ' et les - sont autorisés"
+            },
+            firstName: {
+                regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\-]?[a-zA-Zçéèàëêùûüô])+$/,
+                errorMessage: "Seuls les caractères alphabétiques et les - sont autorisés"
+            },
+            address: {
+                regex: /^([0-9]+)?([\,|\s|\-]?[a-zA-Z0-9çéèàëêùûüô])+$/,
+                errorMessage: "L'adresse saise n'est pas valide"
+            },
+            city: {
+                regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\'|\-]?[a-zA-Zçéèàëêùûüô])+$/,
+                errorMessage: "Seuls les caractères alphabétiques, les ' et - sont autorisés"
+            },
+            email: {
+                regex: /^[\w\-\.]+\@[\w\-\.]+\.[\w]+$/,
+                errorMessage: "L'adresse e-mail n'est pas valide"
+            }
         }
     }
 
@@ -45,8 +47,8 @@ export default class Validator {
         if (stringToTest === '') {
             return { validate: false, message: "Merci de renseigner ce champ de formulaire" }
         }
-        const response = { validate: this[type].regex.test(stringToTest) }
-        !response.validate && (response.message = this[type].errorMessage)
+        const response = { validate: this.matches[type].regex.test(stringToTest) }
+        !response.validate && (response.message = this.matches[type].errorMessage)
 
         return response
     }
