@@ -3,13 +3,17 @@
  */
 export default class Validator {
     constructor() {
+        this.quantity = {
+            regex: /[^(0)][0-9]+/,
+            errorMessage: "Vous ne devez saisir que des nombres; valeur minimale : 1"
+        }
         this.number = {
             regex: /[0-9]+/,
             errorMessage: "Vous ne devez saisir que des nombres"
         }
         this.lastName = {
             regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\'|\-]?[a-zA-Zçéèàëêùûüô])+$/,
-            errorMessage: "Seuls les caractères alphabétiques, les ' et - sont autorisés"
+            errorMessage: "Seuls les caractères alphabétiques, les ' et les - sont autorisés"
         }
         this.firstName = {
             regex: /^[a-zA-Zçéèàëêùûüô]+([\s|\-]?[a-zA-Zçéèàëêùûüô])+$/,

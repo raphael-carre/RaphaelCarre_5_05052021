@@ -326,24 +326,25 @@ export default class HtmlFactory {
                 modal.appendChild(errorMessage)
                 modal.appendChild(buttonDiv)
                 buttonDiv.appendChild(okButton)
-                okButton.addEventListener('click', this._hideModal)
+                okButton.addEventListener('click', this._hideModal.bind(this))
                 break
             case 'confirm':
                 modal.appendChild(buttonDiv)
                 buttonDiv.appendChild(noButton)
                 buttonDiv.appendChild(yesButton)
 
-                noButton.addEventListener('click', this._hideModal)
+                noButton.addEventListener('click', this._hideModal.bind(this))
                 yesButton.addEventListener('click', () => {
                     callbackFunction()
                     this._hideModal()
                 })
                 break
             default:
-                setTimeout(this._hideModal, 1500)
+                setTimeout(this._hideModal.bind(this), 1500)
         }
 
         body.appendChild(overlay)
+        this._lockScroll()
     }
 
     /**
@@ -351,8 +352,10 @@ export default class HtmlFactory {
      */
     static _hideModal() {
         document.querySelector('.overlay').classList.add('fade-out')
-        const timeOut = setTimeout(() => { document.body.removeChild(document.querySelector('.overlay')) }, 200)
-        // clearTimeout(timeOut)
+        setTimeout(() => { 
+            document.body.removeChild(document.querySelector('.overlay')) 
+        }, 200)
+        this._unlockScroll()
     }
 
     /**
@@ -554,5 +557,30 @@ export default class HtmlFactory {
      */
     static _formatPrice(price) {
         return price = `${(price / 100).toString()} €`
+    }
+
+    /**
+     * Bloque la page dans sa position verticale
+     */
+    static _lockScroll() {
+        const scrollOffset = window.scrollY
+        const header = document.querySelector('header')
+        const overlay = document.querySelector('.overlay')
+        document.body.style.position = 'fixed'
+        document.body.style.top = `-${scrollOffset}px`
+        document.body.style.width = '100%'
+        header.style.top = 0
+        overlay.style.top = 0
+    }
+
+    /**
+     * Débloque le scrolling de la page
+     */
+    static _unlockScroll() {
+        const scrollOffset = document.body.style.top
+        const header = document.querySelector('header')
+        document.body.removeAttribute('style')
+        header.removeAttribute('style')
+        window.scrollTo(0, parseInt(scrollOffset || 'O') * -1)
     }
 }
