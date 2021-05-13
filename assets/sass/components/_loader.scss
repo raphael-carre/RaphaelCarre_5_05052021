@@ -1,0 +1,44 @@
+.loader {
+    @extend %flex-col;
+    position: relative;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin: 2em auto;
+    width: 250px;
+    height: 250px;
+
+    
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 2em;
+        width: 50%;
+        height: 50%;
+        border: 6px solid $color-primary--light;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 100vw;
+        z-index: -1;
+
+        animation: loader-animation 2s ease-in-out infinite;
+    }
+
+    &__content {
+        margin-bottom: 2em;
+        font-size: 1.2em;
+
+        span {
+            animation: loader-content-animation 1s ease-in-out infinite;
+
+            &:nth-of-type(2) {
+                animation-delay: .33s;
+            }
+
+            &:last-of-type {
+                animation-delay: .66s;
+            }
+        }
+    }
+}

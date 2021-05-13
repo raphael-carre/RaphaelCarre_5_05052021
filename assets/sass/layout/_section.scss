@@ -46,6 +46,11 @@ section:first-of-type {
 #main {
     margin: 0 auto;
     max-width: 1024px;
+
+    > * {
+        opacity: 0;
+        animation: card-animation .35s ease-out both;
+    }
 }
 
 .product-list {

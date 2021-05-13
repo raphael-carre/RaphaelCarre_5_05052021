@@ -1,3 +1,4 @@
+import HtmlFactory from './HtmlFactory'
 import Routes from './Routes'
 
 /**
@@ -12,6 +13,7 @@ export default class Router {
      * Sélectionne la route à utiliser en fonction de la page en cours.
      */
     route() {
+        HtmlFactory.loader()
         const page = this._pageNameParser()
         Routes[page !== '' ? page : 'index'](this._apiRequestUrl(this.baseApiUrl))
     }

@@ -283,6 +283,21 @@ export default class HtmlFactory {
         this._addToContainer(h2, 'main', '')
         this._addToContainer(container, 'main', 'order-confirmation')
     }
+    
+    static loader() {
+        const main = document.getElementById('main')
+        
+        const loader = document.createElement('div')
+        loader.className = 'loader'
+
+        const loaderP = document.createElement('p')
+        loaderP.className = 'loader__content'
+        loaderP.innerHTML = 'Chargement en cours<span>.</span><span>.</span><span>.</span>'
+        
+        loader.appendChild(loaderP)
+
+        main.appendChild(loader)
+    }
 
     /**
      * Affiche une fenêtre modale au dessus de l'application.
