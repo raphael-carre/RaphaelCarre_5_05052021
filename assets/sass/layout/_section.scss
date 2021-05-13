@@ -58,6 +58,7 @@ section:first-of-type {
 
 #addToCartForm > div {
     @extend %flex-row;
+    flex-wrap: wrap;
 }
 
 #buyForm {

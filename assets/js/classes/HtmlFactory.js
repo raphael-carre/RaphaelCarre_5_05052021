@@ -62,6 +62,8 @@ export default class HtmlFactory {
      * @param {Object} product 
      */
     static showOneProduct(product) {
+        const validator = new Validator()
+        
         // Container
         const card = document.createElement('div')
         card.className = 'product'
@@ -136,6 +138,10 @@ export default class HtmlFactory {
         inputQuantity.value = 1
         inputQuantity.name = 'quantity'
         inputQuantity.id = 'quantity'
+        inputQuantity.addEventListener('change', e => {
+            const validatorResponse = validator.validate(e.target.name, e.target.value)
+            this._showHideErrorElement(e.target, validatorResponse)
+        })
 
         // Bouton
         const buttonSubmit = document.createElement('button')

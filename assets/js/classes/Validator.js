@@ -4,7 +4,7 @@
 export default class Validator {
     constructor() {
         this.quantity = {
-            regex: /[^(0)][0-9]+/,
+            regex: /^[1-9][0-9]*/,
             errorMessage: "Vous ne devez saisir que des nombres; valeur minimale : 1"
         }
         this.number = {
