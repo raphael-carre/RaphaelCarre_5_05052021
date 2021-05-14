@@ -49,7 +49,7 @@ section:first-of-type {
 
     > * {
         opacity: 0;
-        animation: card-animation .35s ease-out both;
+        animation: card-animation .38s linear forwards;
     }
 }
 

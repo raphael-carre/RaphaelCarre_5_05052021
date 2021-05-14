@@ -557,7 +557,11 @@ export default class HtmlFactory {
                 input.parentNode.appendChild(errorSpan)
                 input.previousElementSibling.className = 'label--error'
                 input.className = 'input--error'
+                
+                return
             }
+
+            input.parentNode.querySelector('.error-span').textContent = response.message
 
             return
         }

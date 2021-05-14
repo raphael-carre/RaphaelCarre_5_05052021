@@ -12,10 +12,8 @@ export default class Routes {
     static async index(apiUrl) {
         await Request.getDatas(apiUrl)
             .then(values => {
-                setTimeout(() => {
-                    document.getElementById('main').removeChild(document.querySelector('.loader'))
-                    values.map(item => { HtmlFactory.showProductFromList(item) })
-                }, 500)
+                document.getElementById('main').removeChild(document.querySelector('.loader'))
+                values.map(item => { HtmlFactory.showProductFromList(item) })
             })
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
@@ -27,10 +25,8 @@ export default class Routes {
     static async produit(apiUrl) {
         await Request.getDatas(apiUrl)
             .then(values => {
-                setTimeout(() => {
-                    document.getElementById('main').removeChild(document.querySelector('.loader'))
-                    HtmlFactory.showOneProduct(values) 
-                }, 500)
+                document.getElementById('main').removeChild(document.querySelector('.loader'))
+                HtmlFactory.showOneProduct(values) 
             })
             .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
     }
@@ -40,10 +36,8 @@ export default class Routes {
      * @param {String} apiUrl endpoint
      */
     static panier(apiUrl) {
-        setTimeout(() => {
-            document.getElementById('main').removeChild(document.querySelector('.loader'))
-            HtmlFactory.showCart(apiUrl)
-        }, 100)
+        document.getElementById('main').removeChild(document.querySelector('.loader'))
+        HtmlFactory.showCart(apiUrl)
     }
 
     /**

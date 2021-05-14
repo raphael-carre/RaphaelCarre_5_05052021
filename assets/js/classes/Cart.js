@@ -14,6 +14,15 @@ export default class Cart {
     static addToCart(e) {
         e.preventDefault()
         
+        const validator = new Validator()
+
+        for (let input of e.target) {
+            if (input.name === 'quantity') {
+                const response = validator.validate(input.name, input.value)
+                if (!response.validate) return
+            }
+        }
+
         const cartExists = localStorage.getItem('cart')
         const datas = this._setNewCartItem(e)
 
@@ -29,44 +38,40 @@ export default class Cart {
      * @param {String} apiUrl endpoint
      */
     static deleteItemFromCart(e, apiUrl) {
-            const lineToDelete = e.target.parentNode.parentNode.parentNode
-            const lineParent = lineToDelete.parentNode
-            const indexToDelete = parseInt(e.target.parentNode.getAttribute('data-index'))
-            const totalElement = document.querySelector('.cart__total')
-            const currentCart = JSON.parse(localStorage.getItem('cart'))
+        const lineToDelete = e.target.parentNode.parentNode.parentNode
+        const lineParent = lineToDelete.parentNode
+        const indexToDelete = parseInt(e.target.parentNode.getAttribute('data-index'))
+        const totalElement = document.querySelector('.cart__total')
+        const currentCart = JSON.parse(localStorage.getItem('cart'))
 
-            // Création d'un nouveau panier sans le produit à supprimer
-            let newCart = []
-            currentCart.map((item, index) => { index !== indexToDelete && newCart.push(item) })
+        // Création d'un nouveau panier sans le produit à supprimer
+        let newCart = []
+        currentCart.map((item, index) => { index !== indexToDelete && newCart.push(item) })
 
-            if (newCart.length === 0) {
-                // Vide le LocalStorage et affiche le panier vide
-                localStorage.clear()
+        // Si le nouveau panier est vide, réinitialisation du panier et fin de la fonction
+        if (newCart.length === 0) return this.resetCart()
 
-                const buyForm = document.getElementById('buyForm')
-                document.getElementById('main').removeChild(buyForm)
-                HtmlFactory.showEmptyCart()
-            } else {
-                // Mise à jour du LocalStorage
-                localStorage.setItem('cart', JSON.stringify(newCart))
+        // Mise à jour du LocalStorage
+        localStorage.setItem('cart', JSON.stringify(newCart))
 
-                // Actualise les index des éléments suivant celui à supprimer
-                let nextSibling = lineToDelete.nextElementSibling
-                while (nextSibling) {
-                    const indexElement = nextSibling.querySelector('[data-index]')
-                    const index = parseInt(indexElement.getAttribute('data-index'))
-                    indexElement.setAttribute('data-index', index - 1)
-                    nextSibling = nextSibling.nextElementSibling
-                }
-                lineParent.removeChild(lineToDelete)
-                
-                // Recalcul du prix total
-                this.totalPrice(newCart, apiUrl)
-                    .then(value => totalElement.textContent = `Total : ${value / 100} €`)
-                    .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
-            }
+        // Actualise les index des éléments suivant celui à supprimer
+        let nextSibling = lineToDelete.nextElementSibling
+        while (nextSibling) {
+            const indexElement = nextSibling.querySelector('[data-index]')
+            const index = parseInt(indexElement.getAttribute('data-index'))
+            indexElement.setAttribute('data-index', index - 1)
+            nextSibling = nextSibling.nextElementSibling
+        }
 
-            this.headerNotification()
+        // Supprime la ligne du tableau
+        lineParent.removeChild(lineToDelete)
+        
+        // Recalcul du prix total
+        this.totalPrice(newCart, apiUrl)
+            .then(value => totalElement.textContent = `Total : ${value / 100} €`)
+            .catch(error => { HtmlFactory.showModal('Il y a eu une erreur !', 'error', error) })
+
+        this.headerNotification()
     }
 
     /**
@@ -96,8 +101,7 @@ export default class Cart {
      * après confirmation.
      * @param {Event} e 
      */
-    static resetCart(e) {
-        e.preventDefault()
+    static resetCart() {
         const main = document.getElementById('main')
         const buyForm = document.getElementById('buyForm')
         main.removeChild(buyForm)
