@@ -48,7 +48,7 @@ export default class Cart {
         let newCart = []
         currentCart.map((item, index) => { index !== indexToDelete && newCart.push(item) })
 
-        // Si le nouveau panier est vide, réinitialisation du panier et fin de la fonction
+        // Si le nouveau panier est vide, réinitialisation du panier et fin de la methode
         if (newCart.length === 0) return this.resetCart()
 
         // Mise à jour du LocalStorage
