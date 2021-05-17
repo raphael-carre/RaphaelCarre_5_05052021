@@ -166,6 +166,7 @@ export default class HtmlFactory {
         formField2.appendChild(labelQuantity)
         formField2.appendChild(inputQuantity)
 
+        this._changeHeadTags(product)
         this._addToContainer(card, 'main', 'product-section')
     }
 
@@ -377,6 +378,15 @@ export default class HtmlFactory {
             document.body.removeChild(document.querySelector('.overlay')) 
         }, 200)
         this._unlockScroll()
+    }
+
+    /**
+     * Modifie les éléments de la balise <head> de la page en fonction du produit passé en paramètre.
+     * @param {Object} product 
+     */
+    static _changeHeadTags(product) {
+        let pageTitle = document.head.querySelector('title')
+        pageTitle.textContent += ` - ${product.name}`
     }
 
     /**
