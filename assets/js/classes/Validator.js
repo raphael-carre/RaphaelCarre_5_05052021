@@ -21,7 +21,7 @@ export default class Validator {
                 errorMessage: "Seuls les caractères alphabétiques et les - sont autorisés"
             },
             address: {
-                regex: /^([0-9]+)?([\,|\s|\-]?[a-zA-Z0-9çéèàëêùûüô])+$/,
+                regex: /^([0-9]+)?([\,|\s|\-]?[a-zA-Z0-9çéèàëêùûüô\'\-\s])+$/,
                 errorMessage: "L'adresse saise n'est pas valide"
             },
             city: {
