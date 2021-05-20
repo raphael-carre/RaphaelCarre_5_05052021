@@ -37,11 +37,9 @@ export default class Validator {
 
     /**
      * Compare la chaîne de caractère passée en paramètre avec une expression régulière.
-     * Retourne un objet contenant la réponse au test (Boolean), 
-     * et un message d'erreur si la reponse est false.
-     * @param {String} type (number, lastName, firstName, address, city, email)
+     * @param {String} type (quantity, number, lastName, firstName, address, city, email)
      * @param {String} stringToTest La chaîne de caractères à tester
-     * @returns {Object}
+     * @returns {{validate: Boolean, message: String}} Objet contenant la réponse au test et un message d'erreur si la réponse est "false"
      */
     validate(type, stringToTest) {
         if (stringToTest === '') {

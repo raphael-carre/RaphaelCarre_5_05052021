@@ -157,7 +157,7 @@ export default class Cart {
      * Calcule le montant total du panier.
      * @param {Array} cart Contenu du panier sous forme de tableau
      * @param {String} apiUrl endpoint
-     * @returns {Response} Retourne une réponse contenant le prix total
+     * @returns {Number} Retourne le prix total
      */
     static async totalPrice(cart, apiUrl) {
         let totalPrice = 0
